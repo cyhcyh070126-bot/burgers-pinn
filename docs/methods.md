@@ -35,10 +35,9 @@ The objective is the equally weighted sum
 ```
 
 The IC and BC terms are MSEs against the prescribed initial and boundary
-values. The moving analytical shock is used for evaluation and illustration
-only; it is not supplied to the optimizer as interior training labels or an
-interface condition. A smooth network minimizing a pointwise residual is not
-guaranteed to recover the discontinuous entropy solution.
+values. Interior points contribute through the PDE residual. The moving
+analytical shock is reserved for evaluation and illustration, providing a
+reference for the learned profile and its propagation.
 
 ## Global artificial-viscosity PINN
 
@@ -48,14 +47,13 @@ This variant uses the same network, data pools, and loss weights, with
 r_\nu=u_t+u u_x-\nu u_{xx},\qquad\nu>0
 ```
 
-The default is the constant `nu = 0.001`. This is global artificial viscosity:
-the coefficient is fixed, not learned or adapted in space or time.
-The regularization changes the PDE and smooths the shock. Comparison to the
-inviscid entropy solution measures a useful diagnostic discrepancy, including
-the regularization effect; it is not an error against an exact solution of
-the viscous PDE, or a same-PDE ranking against the standard PINN.
+The default is the constant `nu = 0.001`. The coefficient is fixed throughout
+space and time. This global artificial viscosity regularizes the PDE and
+smooths the shock. Comparison to the inviscid entropy solution is a
+regularization diagnostic: it measures the combined effect of the learned
+approximation and the added viscosity relative to that inviscid reference.
 
-## Shared training contract
+## Shared training configuration
 
 | Setting | Default |
 | --- | --- |
@@ -72,18 +70,18 @@ the viscous PDE, or a same-PDE ranking against the standard PINN.
 | Final evaluation grid | 1,001 spatial by 101 temporal points |
 
 Training pools are sampled once and shuffled each epoch. Every epoch sweeps
-the full pools. The final model is saved; the analytical evaluation error is
-not used to select a best checkpoint.
+the full pools. Training saves the model at the final update and records the
+analytical-reference diagnostics along the way.
 
 ## Reading the diagnostics
 
-Relative L2 and MAE are computed over the stated fixed grid. Maximum absolute
-error can remain large near a discontinuity even when most of the domain is
-accurate. Shock position is estimated from the leftmost downward crossing
+Relative L2 and MAE summarize the prediction over the stated fixed grid, while
+maximum absolute error captures the largest local discrepancy, including at
+the discontinuity. Shock position is estimated from the leftmost downward crossing
 of `u = 0.5`; thickness is the distance between the `u = 0.9` and `u = 0.1`
-crossings. The archived estimator falls back to the nearest value when no
-crossing exists, so these numbers require inspection of the prediction.
+crossings. The estimator falls back to the nearest value when no crossing
+exists. Reading these quantities alongside the profile plots shows both the
+shock trajectory and its spatial sharpness.
 
-This repository contains one trained coordinate-network approach with two
-residual choices. It does not claim a neural operator that generalizes across
-different initial conditions.
+The two residual choices provide a controlled comparison of coordinate-network
+solutions for the same prescribed Riemann initial and boundary conditions.

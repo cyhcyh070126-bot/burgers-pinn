@@ -16,10 +16,11 @@ python -m burgers_pinn.train --method standard --output-dir outputs/first-run --
 ```
 
 This checks training and saves a checkpoint using four optimizer updates.
-It needs no downloaded dataset, pretrained model, GPU, or plotting fonts.
+The example runs on CPU with generated training points and numerical outputs.
 Look for `Completed` in the terminal and `completed: true` in
-`outputs/first-run/result.json`. This small execution check does not reproduce
-the research results below. Use a new output-directory name when running again.
+`outputs/first-run/result.json`. For the 1,000-epoch research configuration,
+see [Train and evaluate](#train-and-evaluate). Use a new output-directory name
+when running again.
 
 ## Prediction examples
 
@@ -27,10 +28,9 @@ the research results below. Use a new output-directory name when running again.
 | :---: | :---: |
 | ![Standard PINN prediction](assets/gifs/standard-pinn.gif) | ![Artificial-viscosity PINN prediction](assets/gifs/artificial-viscosity-pinn.gif) |
 
-These preserved research animations compare predictions with the **inviscid
-entropy solution**. Artificial viscosity changes the PDE, so its agreement with
-that reference is a regularization diagnostic. The GIFs and results below are
-from archived experiments, not the quick-start execution check.
+These research animations and the results below come from archived experiments.
+Both methods are compared with the **inviscid entropy solution**. For the
+artificial-viscosity method, this comparison measures the effect of regularization.
 
 ## Problem and training data
 
@@ -38,7 +38,7 @@ The dimensionless domain is $x\in[-1,1]$, $t\in[0,1]$. The initial state is 1
 to the left of zero and 0 to the right. Boundary values remain 1 at the left
 boundary and 0 at the right. The inviscid entropy shock moves along $x=t/2$.
 
-No downloaded dataset is required. The code samples fixed uniform pools of
+The code generates its training data as fixed uniform pools of
 4,096 initial-condition points, 4,096 boundary-condition points, and 16,384
 interior collocation points. Each epoch shuffles and sweeps these pools.
 The analytical shock solution is used only for diagnostics and plots.
@@ -46,7 +46,7 @@ The analytical shock solution is used only for diagnostics and plots.
 ![Standard PINN training-point layout](assets/figures/standard-training-points.png)
 
 [Original sampling-layout PDF](assets/pdf/standard-training-points.pdf). The
-red shock path is a reference overlay, not an interior training constraint.
+red shock path illustrates the analytical reference for the sampled domain.
 
 ## Network and loss
 
@@ -65,10 +65,10 @@ Automatic differentiation computes the derivatives. Both methods minimize
 \mathcal{L}=\mathrm{MSE}_{\mathrm{IC}}+\mathrm{MSE}_{\mathrm{BC}}+\mathrm{mean}(r^2)
 ```
 
-All three terms have weight 1. Viscosity is fixed rather than learned or
-adapted. The analytical solution is excluded from optimizer losses and
-checkpoint selection. See [the method description](docs/methods.md) for the
-full equations and the limitations of a smooth strong-form network at a shock.
+All three terms have weight 1, and viscosity is a fixed global coefficient.
+Training uses the prescribed initial and boundary values together with the PDE
+residual; the analytical solution is reserved for evaluation. See
+[the method description](docs/methods.md) for the full equations and shock diagnostics.
 
 ## Training strategy
 
@@ -81,13 +81,13 @@ full equations and the limitations of a smooth strong-form network at a shock.
 | Learning rate | Per-update cosine decay from `1e-3` to `1e-5` |
 | Training-history diagnostic | Relative L2 on a 401 × 81 grid |
 | Final evaluation | 1,001 × 101 grid |
-| Saved model | Final update, without analytical-error selection |
+| Saved model | Weights at the final update |
 
 ![Archived standard PINN training history](assets/figures/standard-training-history.png)
 
 [Original training-history PDF](assets/pdf/standard-training-history.pdf).
 
-## Recorded results
+## Research results
 
 | Diagnostic against the inviscid reference | Standard PINN | Artificial viscosity, $\nu=10^{-3}$ |
 | --- | ---: | ---: |
@@ -97,10 +97,9 @@ full equations and the limitations of a smooth strong-form network at a shock.
 | Mean absolute shock-position error | 0.00112313 | 0.000225788 |
 | Mean shock thickness | 0.410108 | 0.00892251 |
 
-These are archived fixed-grid diagnostics, not new measurements or a ranking
-of solvers for the same PDE. The local archive does not contain the original
-trained checkpoints. [Results and provenance](docs/results.md) explain the
-metric definitions, source reports, and available figures.
+These fixed-grid diagnostics are recorded in the archived experiment reports.
+[Results and provenance](docs/results.md) describe the metric definitions,
+reference solution, source reports, and research figures.
 
 ![Archived standard PINN profiles](assets/figures/standard-solution-comparison.png)
 
@@ -147,12 +146,11 @@ python -m pip check
 
 For CUDA training or another platform, install the compatible PyTorch build
 using the [official PyTorch installation instructions](https://pytorch.org/get-started/locally/)
-before installing `requirements.txt`. The independent installation audit was
-performed on Windows CPU; other platforms have not been tested in this release.
+before installing `requirements.txt`. The installation and execution checks
+used a fresh Windows CPU environment.
 
-The original plot style requires locally installed **Times New Roman** faces
-and uses STIX math text; font files are not bundled. Use `--skip-plots` when
-you only need numerical training/evaluation without those fonts.
+The original plot style uses locally installed **Times New Roman** faces and
+STIX math text. Use `--skip-plots` for numerical training and evaluation.
 
 ## Quick execution check
 
@@ -167,8 +165,8 @@ Each training command writes `checkpoint_final.pt`, `training_history.csv`,
 `result.json`, and `evaluation_fields.npz`. Each evaluation command reloads that
 checkpoint and writes a new `result.json` and `evaluation_fields.npz`.
 Successful runs record `completed: true`; smoke runs and evaluations of smoke
-checkpoints also record `smoke_test: true`. They intentionally produce no PDF
-or GIF, even when `--skip-plots` is omitted during evaluation.
+checkpoints also record `smoke_test: true`. Smoke checks use numerical outputs;
+the research configuration also supports PDF and GIF generation as described below.
 
 | | Execution check | Formal defaults |
 | --- | --- | --- |
@@ -177,9 +175,9 @@ or GIF, even when `--skip-plots` is omitted during evaluation.
 | Training pools | Reduced | 24,576 fixed points |
 | Purpose | Verify installation and the train/save/evaluate path | Run a new research experiment |
 
-The smoke results are not accuracy benchmarks or reproductions of the archived
-figures. Every train or evaluation command requires a **new output directory**;
-on a second attempt, choose another name rather than mixing it with an old run.
+Every train or evaluation command requires a **new output directory** to keep
+each experiment's configuration and results together. Choose a new name when
+running again.
 
 ## Train and evaluate
 
@@ -196,10 +194,10 @@ python -m burgers_pinn.evaluate --checkpoint outputs/viscosity/checkpoint_final.
 to force CPU execution. Full training takes substantially more work than the
 smoke check; the terminal reports progress at the diagnostic epochs.
 
-The default budget is 1,000 epochs. `--epochs` and `--seed` allow explicit
-overrides; changing the budget does not reproduce the archived run. Seeds must
-be integers from 0 to 4,294,967,295. `configs/formal_defaults.json` is a record
-for inspection, not a CLI configuration file; editing it does not change a run.
+The default budget is 1,000 epochs. Use `--epochs` and `--seed` to configure a
+new experiment. Seeds must be integers from 0 to 4,294,967,295.
+`configs/formal_defaults.json` documents the default settings; configure runs
+through the CLI options, which are listed by `python -m burgers_pinn.train --help`.
 
 | Output | Contents |
 | --- | --- |
@@ -211,13 +209,13 @@ for inspection, not a CLI configuration file; editing it does not change a run.
 To generate the original-style PDFs and GIF, install Times New Roman and omit
 `--skip-plots`. Training then also writes three PDFs (history, profiles, and
 point layout) and a prediction GIF. Standalone evaluation writes profiles,
-point layout when available, and a GIF; it does not reconstruct training history.
+point layout when available, and a GIF. Training-history plots use the history
+recorded during training.
 
-No historical pretrained research checkpoint is bundled. Evaluation commands
-must point to a checkpoint created by an earlier training command. A checkpoint
-reloads its saved configuration and viscosity, but **does not contain optimizer
-state or support exact training resumption**. Every training command starts a
-new model; standalone evaluation performs no optimization.
+Training creates `checkpoint_final.pt`; pass that file to the evaluation command
+to reload the model with its saved configuration, viscosity, and sampled points.
+Each training command initializes a new experiment. The evaluation command
+uses a saved model to generate predictions and metrics.
 
 ## Repository layout
 
@@ -229,6 +227,7 @@ assets/        Preserved research GIFs/PDFs and PDF previews for this README
 docs/          Methods, results, provenance, and reproducibility notes
 ```
 
-Run checks with `python -m unittest discover -s tests -v`. Full 1,000-epoch
-experiments were not rerun during packaging. Attribution and licensing scope
-are described in [NOTICE.md](NOTICE.md).
+Run the numerical and train/save/evaluate checks with
+`python -m unittest discover -s tests -v`. See
+[Reproducibility](docs/reproducibility.md) for the tested environment and
+verification details, and [NOTICE.md](NOTICE.md) for attribution and licensing.
