@@ -85,6 +85,48 @@
       "sha256": "09520d85dfe35a59fa309ac226ea1384842f5b373f0d0f93b3a0992e677ce8bc",
       "modification": "Unchanged byte-for-byte copy; destination filename only changed.",
       "association_evidence": "Migration README identifies the sample as a Vanilla case; extracted PDF text confirms the method and equation. Original runtime source hash was not recorded."
+    },
+    {
+      "path": "assets/pdf/inviscid-shock-reference.pdf",
+      "source_identity": "PDF_PLOTTING_MIGRATION/samples/pinn_burgers_shock_reference.pdf",
+      "method": "analytical_reference",
+      "description": "Shared inviscid entropy-solution profile at t=0.50 and shock trajectory x_s(t)=0.5t; analytical reference for the Riemann problem.",
+      "bytes": 49628,
+      "sha256": "c1e921349c975b02adce744b20e3c111e3b8d155f8bc994c85a4235e45a163d9",
+      "modification": "Unchanged byte-for-byte copy; destination filename only changed.",
+      "scientific_contract": {
+        "equation": "u_t + (u^2/2)_x = 0",
+        "domain": {
+          "x": [
+            -1.0,
+            1.0
+          ],
+          "t": [
+            0.0,
+            1.0
+          ]
+        },
+        "initial_condition": "u(x,0)=1 for x<0 and 0 for x>=0",
+        "boundary_condition": "u(-1,t)=1; u(1,t)=0",
+        "entropy_solution": "u(x,t)=1 for x<0.5t and 0 for x>=0.5t",
+        "reference_time": 0.5,
+        "reference_shock_position": 0.25,
+        "role": "Analytical teaching figure, not a trained PINN output or a viscous-PDE exact solution."
+      },
+      "association_evidence": "Migration README entry P6 identifies the original PDF as an analytical reference. Extracted PDF text and visual inspection confirm the inviscid equation, left/right states, x and t ranges, shock speed, and displayed t=0.50. These agree with burgers_pinn/core.py and configs/formal_defaults.json. The archived renderer is a later candidate version; no reproduction from that renderer is claimed.",
+      "pdf": {
+        "pages": 1,
+        "page_size_pt": [
+          1044.0,
+          453.6
+        ],
+        "embedded_fonts": [
+          "TimesNewRomanPSMT",
+          "TimesNewRomanPS-BoldMT",
+          "STIXGeneral-Regular",
+          "STIXGeneral-Italic"
+        ]
+      }
     }
   ],
   "archived_reports": [
@@ -268,6 +310,19 @@
       "source_pdf": "assets/pdf/standard-training-points.pdf",
       "render_scale": 1.5,
       "sha256": "58589f0074190cf498ca8683265fc63c7020e12bebbeb7de325c904deecb6269",
+      "layout_or_data_changed": false
+    },
+    {
+      "file": "assets/figures/inviscid-shock-reference.png",
+      "source_pdf": "assets/pdf/inviscid-shock-reference.pdf",
+      "renderer": "Poppler pdftoppm",
+      "render_scale": 1.5,
+      "resolution_dpi": 108,
+      "size_px": [
+        1566,
+        681
+      ],
+      "sha256": "f6fb29fcc51599db02533ce0cdf206e9d821e6f7cf50307b42d0a3ca9c813ef8",
       "layout_or_data_changed": false
     }
   ]
