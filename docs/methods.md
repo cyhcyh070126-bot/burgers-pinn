@@ -5,8 +5,10 @@
 The space-time domain is `x in [-1, 1]`, `t in [0, 1]`. Coordinates and
 solution values in this benchmark are dimensionless. The prescribed data are
 
-$$u(x,0)=\begin{cases}1 & x<0,\\0 & x\geq0,\end{cases}
-\qquad u(-1,t)=1,\quad u(1,t)=0.$$
+```math
+u(x,0)=\begin{cases}1 & x<0,\\0 & x\geq0,\end{cases}
+\qquad u(-1,t)=1,\quad u(1,t)=0
+```
 
 The inviscid entropy solution is a step moving along `x = t/2`:
 `u(x,t) = 1` for `x < t/2`, and `0` otherwise. The value on the discontinuity
@@ -20,13 +22,17 @@ weights, zero biases, and 29,377 trainable parameters.
 
 Automatic differentiation supplies the strong-form residual
 
-$$r_0=u_t+u\,u_x.$$
+```math
+r_0=u_t+u u_x
+```
 
 The objective is the equally weighted sum
 
-$$\mathcal L=\mathcal L_{\mathrm{IC}}+
-\mathcal L_{\mathrm{BC}}+\mathcal L_{\mathrm{PDE}},
-\qquad\mathcal L_{\mathrm{PDE}}=\operatorname{mean}(r_0^2).$$
+```math
+\mathcal{L}=\mathcal{L}_{\mathrm{IC}}+
+\mathcal{L}_{\mathrm{BC}}+\mathcal{L}_{\mathrm{PDE}},
+\qquad\mathcal{L}_{\mathrm{PDE}}=\mathrm{mean}(r_0^2)
+```
 
 The IC and BC terms are MSEs against the prescribed initial and boundary
 values. The moving analytical shock is used for evaluation and illustration
@@ -38,7 +44,9 @@ guaranteed to recover the discontinuous entropy solution.
 
 This variant uses the same network, data pools, and loss weights, with
 
-$$r_\nu=u_t+u\,u_x-\nu u_{xx},\qquad\nu>0.$$
+```math
+r_\nu=u_t+u u_x-\nu u_{xx},\qquad\nu>0
+```
 
 The default is the constant `nu = 0.001`. This is global artificial viscosity:
 the coefficient is fixed, not learned or adapted in space or time.
