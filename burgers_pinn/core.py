@@ -122,7 +122,7 @@ def uniform_points(count: int, low: float, high: float, device: torch.device) ->
 def build_fixed_training_points(
     config: TrainingConfig, device: torch.device
 ) -> dict[str, Tensor]:
-    """Create the fixed IC, BC, and interior pools once on the GPU."""
+    """Create the fixed IC, BC, and interior pools once on the selected device."""
     x_ic_left = uniform_points(
         config.initial_points_per_side, config.x_min, 0.0, device
     )
@@ -435,4 +435,11 @@ def train_scalar(
                 "learning_rate": rate,
             }
         )
+        if epoch == 1 or epoch % config.evaluation_interval_epochs == 0 or epoch == config.epochs:
+            print(
+                f"Epoch {epoch}/{config.epochs} | updates {step}/{config.total_optimizer_steps} | "
+                f"loss {sums['total'] / config.batches_per_epoch:.6g} | "
+                f"diagnostic relative L2 {relative_l2:.6g} | lr {rate:.3g}",
+                flush=True,
+            )
     return model, history, pools

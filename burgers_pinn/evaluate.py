@@ -6,7 +6,7 @@ from dataclasses import asdict
 from pathlib import Path
 
 from .core import evaluate_final_model
-from .runtime import (device_metadata, load_checkpoint, render_outputs,
+from .runtime import (device_metadata, load_checkpoint, prepare_plotting, render_outputs,
                       require_new_directory, scientific_contract, select_device,
                       write_evaluation_arrays, write_json)
 
@@ -23,8 +23,7 @@ def main() -> None:
     smoke = bool(payload.get("smoke_test", False))
     plots_enabled = not (args.skip_plots or smoke)
     if plots_enabled:
-        from .plotting import configure_typography
-        configure_typography()
+        prepare_plotting()
     require_new_directory(args.output_dir)
     metrics, arrays = evaluate_final_model(model, config, device)
     write_evaluation_arrays(args.output_dir, arrays)

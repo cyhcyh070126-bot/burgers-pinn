@@ -98,6 +98,11 @@ class NumericalContractTests(unittest.TestCase):
             validate_config(replace(TrainingConfig(), epochs=0))
         with self.assertRaises(ValueError):
             validate_config(replace(TrainingConfig(), x_min=-2.0))
+        for seed in (-1, 2**32):
+            with self.subTest(seed=seed), self.assertRaisesRegex(ValueError, "seed"):
+                validate_config(replace(TrainingConfig(), seed=seed))
+        with self.assertRaises(ValueError):
+            validate_config(replace(TrainingConfig(), evaluation_x_points=1001.5))
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "run"
             require_new_directory(path)
@@ -105,6 +110,25 @@ class NumericalContractTests(unittest.TestCase):
             with self.assertRaises(FileExistsError):
                 require_new_directory(path)
             self.assertEqual((path / "sentinel.txt").read_text(encoding="utf-8"), "keep")
+
+    def test_checkpoint_rejects_incomplete_or_unknown_metadata(self):
+        config = smoke_config()
+        model = VanillaBurgersPINN(config)
+        pools = build_fixed_training_points(config, torch.device("cpu"))
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "checkpoint.pt"
+            save_checkpoint(path, model, config, 0.0, pools, True)
+            payload = torch.load(path, weights_only=True)
+            for name in ("format_version", "smoke_test", "evaluation_x_points"):
+                broken = dict(payload)
+                if name == "evaluation_x_points":
+                    broken["configuration"] = dict(payload["configuration"])
+                    del broken["configuration"][name]
+                else:
+                    del broken[name]
+                torch.save(broken, path)
+                with self.subTest(missing=name), self.assertRaises(ValueError):
+                    load_checkpoint(path, torch.device("cpu"))
 
 
 if __name__ == "__main__":
