@@ -23,17 +23,38 @@ def select_device(value: str) -> torch.device:
 
 def require_new_directory(path: Path) -> None:
     """Never reuse an output directory, even if it is currently empty."""
-    path.mkdir(parents=True, exist_ok=False)
+    try:
+        path.mkdir(parents=True, exist_ok=False)
+    except FileExistsError as error:
+        raise FileExistsError(
+            f"Output path already exists: {path}. Select a new --output-dir; existing runs are never overwritten."
+        ) from error
+
+
+def prepare_plotting() -> None:
+    """Explain how to run the numerical workflow without the original fonts."""
+    from .plotting import configure_typography
+
+    try:
+        configure_typography()
+    except ValueError as error:
+        raise RuntimeError(
+            "Plotting requires installed Times New Roman fonts. Use --skip-plots "
+            "for numerical training/evaluation, or install those fonts to reproduce the original plot style."
+        ) from error
 
 
 def validate_config(config: TrainingConfig) -> None:
+    if type(config.seed) is not int or not 0 <= config.seed < 2**32:
+        raise ValueError("--seed must be an integer between 0 and 4294967295.")
     positive = (
         "hidden_width", "hidden_layers", "initial_points_per_side",
         "boundary_points_per_side", "pde_points", "initial_points_per_side_batch",
         "boundary_points_per_side_batch", "pde_batch", "epochs",
         "evaluation_interval_epochs", "inference_batch_size",
+        "evaluation_x_points", "evaluation_t_points",
     )
-    if any(not isinstance(getattr(config, name), int) or getattr(config, name) <= 0 for name in positive):
+    if any(type(getattr(config, name)) is not int or getattr(config, name) <= 0 for name in positive):
         raise ValueError("Network, sampling and training counts must be positive integers.")
     if config.evaluation_x_points < 2 or config.evaluation_t_points < 2:
         raise ValueError("Evaluation grids need at least two points per axis.")
@@ -108,10 +129,14 @@ def load_checkpoint(path: Path, device: torch.device):
     payload = torch.load(path, map_location="cpu", weights_only=True)
     if not isinstance(payload, dict) or not {"model_state_dict", "configuration", "global_viscosity"} <= payload.keys():
         raise ValueError("Expected a Burgers checkpoint with model state, configuration and viscosity.")
+    if payload.get("format_version") != 1:
+        raise ValueError("Unsupported checkpoint format; expected a version-1 checkpoint from burgers_pinn.train.")
+    if type(payload.get("smoke_test")) is not bool:
+        raise ValueError("Checkpoint must record whether it is a smoke test.")
     names = {field.name for field in fields(TrainingConfig)}
     values = payload["configuration"]
-    if not isinstance(values, dict) or set(values) - names:
-        raise ValueError("Checkpoint contains unsupported configuration fields.")
+    if not isinstance(values, dict) or set(values) != names:
+        raise ValueError("Checkpoint must contain the complete saved training configuration, with no unsupported fields.")
     config = TrainingConfig(**values)
     validate_config(config)
     viscosity = float(payload["global_viscosity"])

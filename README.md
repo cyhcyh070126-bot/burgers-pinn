@@ -2,12 +2,24 @@
 
 **Yanghao Chen · Tongji University**
 
-[Research homepage](https://cyhcyh070126-bot.github.io/) · [Methods](docs/methods.md) · [Results and figures](docs/results.md) · [Reproducibility](docs/reproducibility.md)
+[Install](#install) · [Quick execution check](#quick-execution-check) · [Train and evaluate](#train-and-evaluate) · [Methods](docs/methods.md) · [Results](docs/results.md) · [Reproducibility](docs/reproducibility.md) · [Research homepage](https://cyhcyh070126-bot.github.io/)
 
 A PyTorch study of shock formation and propagation in a one-dimensional Burgers
 Riemann problem. Two implementations share the same coordinate network and
 training data: a standard strong-form PINN and a PINN with constant global
 artificial viscosity.
+
+**First run:** after [installing](#install), run this from the repository root:
+
+```bash
+python -m burgers_pinn.train --method standard --output-dir outputs/first-run --device cpu --smoke-test
+```
+
+This checks training and saves a checkpoint using four optimizer updates.
+It needs no downloaded dataset, pretrained model, GPU, or plotting fonts.
+Look for `Completed` in the terminal and `completed: true` in
+`outputs/first-run/result.json`. This small execution check does not reproduce
+the research results below. Use a new output-directory name when running again.
 
 ## Prediction examples
 
@@ -96,22 +108,48 @@ metric definitions, source reports, and available figures.
 
 ## Install
 
-Use Python 3.10 or newer; preparation checks used Python 3.12 and PyTorch 2.10.
+The verified installation uses **Python 3.12** and **PyTorch 2.10.0** in a new
+virtual environment. The commands below select the CPU build so the first run
+does not depend on CUDA. Clone the repository and run all commands from its root:
 
 ```bash
 git clone https://github.com/cyhcyh070126-bot/burgers-pinn.git
 cd burgers-pinn
-python -m venv .venv
 ```
 
-Activate with `.venv\Scripts\Activate.ps1` in Windows PowerShell, or
-`source .venv/bin/activate` on Linux/macOS, then install:
+On **Windows PowerShell**:
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install torch==2.10.0 --index-url https://download.pytorch.org/whl/cpu
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m pip check
+```
+
+Activate with `.\.venv\Scripts\Activate.ps1` to use the shorter `python`
+commands below. If PowerShell blocks activation, replace `python` in those
+commands with `.\.venv\Scripts\python.exe`; no system policy changes are needed.
+For example:
+
+```powershell
+.\.venv\Scripts\python.exe -m burgers_pinn.train --method standard --output-dir outputs/first-run --device cpu --smoke-test
+```
+
+On **Linux**:
 
 ```bash
+python3.12 -m venv .venv
+source .venv/bin/activate
+python -m pip install torch==2.10.0 --index-url https://download.pytorch.org/whl/cpu
 python -m pip install -r requirements.txt
+python -m pip check
 ```
 
-For GPU training, install the PyTorch build appropriate for your hardware.
+For CUDA training or another platform, install the compatible PyTorch build
+using the [official PyTorch installation instructions](https://pytorch.org/get-started/locally/)
+before installing `requirements.txt`. The independent installation audit was
+performed on Windows CPU; other platforms have not been tested in this release.
+
 The original plot style requires locally installed **Times New Roman** faces
 and uses STIX math text; font files are not bundled. Use `--skip-plots` when
 you only need numerical training/evaluation without those fonts.
@@ -121,31 +159,65 @@ you only need numerical training/evaluation without those fonts.
 ```bash
 python -m burgers_pinn.train --method standard --output-dir outputs/smoke-standard --device cpu --smoke-test
 python -m burgers_pinn.train --method viscosity --output-dir outputs/smoke-viscosity --device cpu --smoke-test
-python -m burgers_pinn.evaluate --checkpoint outputs/smoke-viscosity/checkpoint_final.pt --output-dir outputs/smoke-evaluation --device cpu
+python -m burgers_pinn.evaluate --checkpoint outputs/smoke-standard/checkpoint_final.pt --output-dir outputs/smoke-standard-evaluation --device cpu
+python -m burgers_pinn.evaluate --checkpoint outputs/smoke-viscosity/checkpoint_final.pt --output-dir outputs/smoke-viscosity-evaluation --device cpu
 ```
 
-Smoke checks use a reduced network, reduced pools, and four optimizer updates.
-Their metadata records `smoke_test: true`, and research plots are disabled.
-They verify execution and checkpoint loading, not the archived performance.
-Every run requires a **new output directory**.
+Each training command writes `checkpoint_final.pt`, `training_history.csv`,
+`result.json`, and `evaluation_fields.npz`. Each evaluation command reloads that
+checkpoint and writes a new `result.json` and `evaluation_fields.npz`.
+Successful runs record `completed: true`; smoke runs and evaluations of smoke
+checkpoints also record `smoke_test: true`. They intentionally produce no PDF
+or GIF, even when `--skip-plots` is omitted during evaluation.
+
+| | Execution check | Formal defaults |
+| --- | --- | --- |
+| Network | 2 hidden layers, width 8 | 8 hidden layers, width 64 |
+| Training | 2 epochs, 4 updates | 1,000 epochs, 32,000 updates |
+| Training pools | Reduced | 24,576 fixed points |
+| Purpose | Verify installation and the train/save/evaluate path | Run a new research experiment |
+
+The smoke results are not accuracy benchmarks or reproductions of the archived
+figures. Every train or evaluation command requires a **new output directory**;
+on a second attempt, choose another name rather than mixing it with an old run.
 
 ## Train and evaluate
 
+These commands use the formal model and full training budget, and work without
+Times New Roman because `--skip-plots` keeps only numerical outputs:
+
 ```bash
-python -m burgers_pinn.train --method standard --output-dir outputs/standard --device auto
-python -m burgers_pinn.train --method viscosity --viscosity 0.001 --output-dir outputs/viscosity --device auto
-python -m burgers_pinn.evaluate --checkpoint outputs/viscosity/checkpoint_final.pt --output-dir outputs/viscosity-evaluation --device auto
+python -m burgers_pinn.train --method standard --output-dir outputs/standard --device auto --skip-plots
+python -m burgers_pinn.train --method viscosity --viscosity 0.001 --output-dir outputs/viscosity --device auto --skip-plots
+python -m burgers_pinn.evaluate --checkpoint outputs/viscosity/checkpoint_final.pt --output-dir outputs/viscosity-evaluation --device auto --skip-plots
 ```
 
-The default budget is 1,000 epochs. `--epochs` and `--seed` allow explicit
-overrides; changing the budget does not reproduce the archived run.
+`--device auto` selects CUDA when available and CPU otherwise. Use `--device cpu`
+to force CPU execution. Full training takes substantially more work than the
+smoke check; the terminal reports progress at the diagnostic epochs.
 
-Training writes a checkpoint, CSV history, `result.json`, and
-`evaluation_fields.npz` containing coordinates, prediction, inviscid reference,
-and absolute error. With plots enabled, it also writes three PDFs (training
-history, profiles, and point layout) and a prediction GIF. Standalone evaluation
-reloads the stored configuration and viscosity and writes metrics, arrays,
-profiles, point layout when available, and a GIF.
+The default budget is 1,000 epochs. `--epochs` and `--seed` allow explicit
+overrides; changing the budget does not reproduce the archived run. Seeds must
+be integers from 0 to 4,294,967,295. `configs/formal_defaults.json` is a record
+for inspection, not a CLI configuration file; editing it does not change a run.
+
+| Output | Contents |
+| --- | --- |
+| `checkpoint_final.pt` | Final weights, full configuration, viscosity, sampled points, and smoke flag; training only |
+| `training_history.csv` | Per-epoch losses, learning rate, timing, and diagnostic relative L2; training only |
+| `result.json` | Completion status, configuration, device, and numerical metrics |
+| `evaluation_fields.npz` | `x`, `t`, `prediction`, `truth` (inviscid reference), and `absolute_error` arrays |
+
+To generate the original-style PDFs and GIF, install Times New Roman and omit
+`--skip-plots`. Training then also writes three PDFs (history, profiles, and
+point layout) and a prediction GIF. Standalone evaluation writes profiles,
+point layout when available, and a GIF; it does not reconstruct training history.
+
+No historical pretrained research checkpoint is bundled. Evaluation commands
+must point to a checkpoint created by an earlier training command. A checkpoint
+reloads its saved configuration and viscosity, but **does not contain optimizer
+state or support exact training resumption**. Every training command starts a
+new model; standalone evaluation performs no optimization.
 
 ## Repository layout
 

@@ -6,7 +6,7 @@ from dataclasses import asdict, replace
 from pathlib import Path
 
 from .core import TrainingConfig, evaluate_final_model, set_reproducible_seed, train_scalar, write_history_csv
-from .runtime import (device_metadata, render_outputs, require_new_directory,
+from .runtime import (device_metadata, prepare_plotting, render_outputs, require_new_directory,
                       resolve_viscosity, save_checkpoint, scientific_contract,
                       select_device, smoke_config, validate_config,
                       write_evaluation_arrays, write_json)
@@ -35,8 +35,7 @@ def main() -> None:
     device = select_device(args.device)
     plots_enabled = not (args.skip_plots or args.smoke_test)
     if plots_enabled:
-        from .plotting import configure_typography
-        configure_typography()  # Fail before training if the original font contract cannot be met.
+        prepare_plotting()  # Fail before training if the original font contract cannot be met.
     require_new_directory(args.output_dir)
     metadata = {
         "completed": False, "method": args.method, "smoke_test": args.smoke_test,
