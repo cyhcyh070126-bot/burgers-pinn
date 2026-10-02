@@ -5,6 +5,10 @@ The repository includes their prediction animations, original PDF figures,
 and recorded diagnostics. For a new experiment, use the full training commands
 in the [README](../README.md#train-and-evaluate).
 
+The [illustrated experiment guide](experiment-guide.md) connects the problem,
+training points, optimizer batches, and output files to these figures. It also
+includes a Python example for reading a saved profile from a new run.
+
 ## Problem and comparison
 
 Both runs use the Riemann initial condition $u(x,0)=1$ for $x<0$ and $0$

@@ -2,7 +2,7 @@
 
 **Yanghao Chen · Tongji University**
 
-[Install](#install) · [Quick execution check](#quick-execution-check) · [Train and evaluate](#train-and-evaluate) · [Methods](docs/methods.md) · [Results](docs/results.md) · [Reproducibility](docs/reproducibility.md) · [Research homepage](https://cyhcyh070126-bot.github.io/)
+[Illustrated experiment guide](docs/experiment-guide.md) · [Install](#install) · [Quick execution check](#quick-execution-check) · [Train and evaluate](#train-and-evaluate) · [Methods](docs/methods.md) · [Results](docs/results.md) · [Reproducibility](docs/reproducibility.md) · [Research homepage](https://cyhcyh070126-bot.github.io/)
 
 A PyTorch study of shock propagation in a one-dimensional Burgers
 Riemann problem. Two implementations share the same coordinate network and
@@ -36,11 +36,37 @@ The left animation uses the standard residual, and the right adds constant
 artificial viscosity. For the latter method, comparison with the inviscid
 reference serves as a regularization diagnostic.
 
+## What one experiment contains
+
+One experiment learns a continuous field from a prescribed Riemann problem.
+The program generates the training points, optimizes a coordinate network,
+and saves its weights, training history, and space-time predictions.
+
+| Component | Default contents |
+| --- | --- |
+| Physical problem | $x\in[-1,1]$, $t\in[0,1]$; initial jump from 1 to 0; boundary values 1 and 0 |
+| Training points | 4,096 initial + 4,096 boundary + 16,384 interior points, generated once per run |
+| One optimizer batch | 128 initial + 128 boundary + 512 interior points |
+| Coordinate network | $(x,t)\mapsto u_\theta(x,t)$; eight hidden layers of width 64 |
+| Saved numerical files | Final checkpoint, per-epoch history CSV, result JSON, and evaluation NPZ |
+| Figures when enabled | Training-history PDF, point-layout PDF, profile-comparison PDF, and prediction GIF |
+
+The **[complete illustrated experiment guide](docs/experiment-guide.md)**
+follows a coordinate sample into a training batch, explains the two residuals,
+lists all output files, and shows how to read a saved prediction at $t=0.5$.
+
 ## Problem and training data
 
 The dimensionless domain is $x\in[-1,1]$, $t\in[0,1]$. The initial state is 1
 to the left of zero and 0 to the right. Boundary values remain 1 at the left
 boundary and 0 at the right. The inviscid entropy shock moves along $x=t/2$.
+
+![Analytical inviscid shock profiles and trajectory](assets/figures/inviscid-shock-reference.png)
+
+This original analytical reference figure shows the moving step at $t=0.5$
+and its path through space and time; the shock is at $x=0.25$. It defines the
+reference used in the prediction plots.
+[Open the original PDF](assets/pdf/inviscid-shock-reference.pdf).
 
 The code generates its training data as fixed uniform pools of
 4,096 initial-condition points, 4,096 boundary-condition points, and 16,384
@@ -231,7 +257,9 @@ through the CLI options, which are listed by `python -m burgers_pinn.train --hel
 | `result.json` | Completion status, configuration, device, and numerical metrics |
 | `evaluation_fields.npz` | Coordinate vectors `x`, `t`, plus `prediction`, `truth` (inviscid reference), and `absolute_error` arrays indexed by time, then space |
 
-See [reading a saved evaluation](docs/results.md#reading-a-saved-evaluation)
+See the [illustrated output-file guide](docs/experiment-guide.md#5-what-appears-in-the-experiment-folder)
+for exact filenames and a runnable array-reading example, and
+[reading a saved evaluation](docs/results.md#reading-a-saved-evaluation)
 for array shapes and the connection between field values and profile plots.
 
 To generate the original-style PDFs and GIF, install Times New Roman and omit
@@ -252,7 +280,7 @@ burgers_pinn/   Model, sampling, residuals, training, evaluation, original plott
 configs/       Recorded formal defaults
 tests/         Numerical and execution-contract checks
 assets/        Preserved research GIFs/PDFs and PDF previews for this README
-docs/          Methods, results, provenance, and reproducibility notes
+docs/          Illustrated experiment guide, methods, results, and reproducibility
 ```
 
 Run the numerical and train/save/evaluate checks with

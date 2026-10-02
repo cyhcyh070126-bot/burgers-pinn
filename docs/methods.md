@@ -1,5 +1,8 @@
 # Problem and methods
 
+For a visual walkthrough from coordinate samples to saved predictions, see
+[a complete Burgers PINN experiment](experiment-guide.md).
+
 ## One Riemann problem
 
 The space-time domain is `x in [-1, 1]`, `t in [0, 1]`. Coordinates and
