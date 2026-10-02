@@ -1,0 +1,15 @@
+{
+  "description": "Original archived source identities; not hashes of refactored package files.",
+  "files": [
+    {
+      "source": "PDF_PLOTTING_MIGRATION/code/pinn_burgers_common_plotting.py",
+      "sha256": "156f7f4418d34d1376374b576311b9d7c07a52aa9940a56501c2f14390ac7358",
+      "bytes": 49150
+    },
+    {
+      "source": "PDF_PLOTTING_MIGRATION/code/pinn_burgers_formal_rebuild.py",
+      "sha256": "e6a097b7a622d8b0a6eeacbfe892617be384f0eca2df6f973d1724ee4328478d",
+      "bytes": 15978
+    }
+  ]
+}

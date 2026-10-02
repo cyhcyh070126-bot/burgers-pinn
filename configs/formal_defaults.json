@@ -1,0 +1,35 @@
+{
+  "description": "Reference defaults used by the CLI, not an input file. The viscosity method adds global nu=0.001; standard uses nu=0.",
+  "training": {
+    "seed": 1234,
+    "x_min": -1.0,
+    "x_max": 1.0,
+    "t_min": 0.0,
+    "t_max": 1.0,
+    "shock_speed": 0.5,
+    "hidden_width": 64,
+    "hidden_layers": 8,
+    "activation": "Tanh",
+    "initial_points_per_side": 2048,
+    "boundary_points_per_side": 2048,
+    "pde_points": 16384,
+    "initial_points_per_side_batch": 64,
+    "boundary_points_per_side_batch": 64,
+    "pde_batch": 512,
+    "epochs": 1000,
+    "learning_rate_start": 0.001,
+    "learning_rate_min": 1e-05,
+    "evaluation_interval_epochs": 5,
+    "evaluation_x_points": 1001,
+    "evaluation_t_points": 101,
+    "inference_batch_size": 8192
+  },
+  "methods": {
+    "standard": {
+      "global_viscosity": 0.0
+    },
+    "viscosity": {
+      "global_viscosity": 0.001
+    }
+  }
+}

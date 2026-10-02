@@ -1,0 +1,274 @@
+{
+  "schema_version": 1,
+  "scope": [
+    "standard inviscid strong-form PINN",
+    "constant global artificial-viscosity PINN with nu=0.001"
+  ],
+  "excluded": [
+    "prescribed-interface DD/XPINN",
+    "adaptive viscosity",
+    "other global viscosity values",
+    "synthetic demonstration outputs"
+  ],
+  "assets": [
+    {
+      "path": "assets/gifs/standard-pinn.gif",
+      "source_identity": "Published personal-homepage asset: images/research/burgers_standard_pinn_prediction.gif",
+      "method": "standard",
+      "archived_case": "formal_vanilla_strongform_8x64",
+      "description": "Final Standard PINN prediction and inviscid entropy reference",
+      "bytes": 811912,
+      "sha256": "e5955b92be0f38944acf5e136664cfb599380a2804e9c52e5e6f63192c6b4233",
+      "modification": "Unchanged byte-for-byte copy; destination filename only changed.",
+      "animation": {
+        "size_px": [
+          960,
+          900
+        ],
+        "frame_count": 61,
+        "duration_ms": 100,
+        "loop": 0
+      },
+      "homepage_commit": "97112352264a2f3a4efabc6529d50df2abd6ac03",
+      "association_evidence": "Visible method label and equation, animation dimensions/frame timing, archived result manifest, and PINN FILE_INDEX entry agree. The original remote GIF hash and checkpoint are unavailable in this local archive; this is not a checkpoint reproduction claim."
+    },
+    {
+      "path": "assets/gifs/artificial-viscosity-pinn.gif",
+      "source_identity": "Published personal-homepage asset: images/research/burgers_artificial_viscosity_pinn_prediction.gif",
+      "method": "artificial_viscosity",
+      "archived_case": "formal_global_viscosity_nu_1e-3_8x64",
+      "description": "Final artificial-viscosity PINN prediction (nu=0.001) and inviscid entropy reference",
+      "bytes": 751816,
+      "sha256": "9849b9c404e88436c4e0f9485852a75f15b320d2253919d828db2b93dff35321",
+      "modification": "Unchanged byte-for-byte copy; destination filename only changed.",
+      "animation": {
+        "size_px": [
+          960,
+          900
+        ],
+        "frame_count": 61,
+        "duration_ms": 100,
+        "loop": 0
+      },
+      "homepage_commit": "97112352264a2f3a4efabc6529d50df2abd6ac03",
+      "association_evidence": "Visible method label and equation, animation dimensions/frame timing, archived result manifest, and PINN FILE_INDEX entry agree. The original remote GIF hash and checkpoint are unavailable in this local archive; this is not a checkpoint reproduction claim."
+    },
+    {
+      "path": "assets/pdf/standard-training-history.pdf",
+      "source_identity": "PDF_PLOTTING_MIGRATION/samples/pinn_burgers_scalar_training.pdf",
+      "method": "standard",
+      "archived_case": "formal_vanilla_strongform_8x64",
+      "description": "Archived Standard PINN training history",
+      "bytes": 85932,
+      "sha256": "70b57ef9469f7235696245a13ef55c0d86a2a32e02a07e314a8fc102dd4edb2a",
+      "modification": "Unchanged byte-for-byte copy; destination filename only changed.",
+      "association_evidence": "Migration README identifies the sample as a Vanilla case; extracted PDF text confirms the method and equation. Original runtime source hash was not recorded."
+    },
+    {
+      "path": "assets/pdf/standard-solution-comparison.pdf",
+      "source_identity": "PDF_PLOTTING_MIGRATION/samples/pinn_burgers_solution_comparison.pdf",
+      "method": "standard",
+      "archived_case": "formal_vanilla_strongform_8x64",
+      "description": "Archived Standard PINN prediction at five evaluation times",
+      "bytes": 53127,
+      "sha256": "af87bb58489bcd5b64e132e91a7bfbce63a85c5c6231af18ce24572c17abe3e6",
+      "modification": "Unchanged byte-for-byte copy; destination filename only changed.",
+      "association_evidence": "Migration README identifies the sample as a Vanilla case; extracted PDF text confirms the method and equation. Original runtime source hash was not recorded."
+    },
+    {
+      "path": "assets/pdf/standard-training-points.pdf",
+      "source_identity": "PDF_PLOTTING_MIGRATION/samples/pinn_burgers_scalar_points.pdf",
+      "method": "standard",
+      "archived_case": "formal_vanilla_strongform_8x64",
+      "description": "Archived Standard PINN fixed-point pool layout; reference shock path is not training supervision",
+      "bytes": 92613,
+      "sha256": "09520d85dfe35a59fa309ac226ea1384842f5b373f0d0f93b3a0992e677ce8bc",
+      "modification": "Unchanged byte-for-byte copy; destination filename only changed.",
+      "association_evidence": "Migration README identifies the sample as a Vanilla case; extracted PDF text confirms the method and equation. Original runtime source hash was not recorded."
+    }
+  ],
+  "archived_reports": [
+    {
+      "case": "formal_vanilla_strongform_8x64",
+      "source_identity": "PDF_PLOTTING_MIGRATION/manifests/pinn_burgers_formal/formal_vanilla_strongform_8x64.json",
+      "source_sha256": "3dd2a3fe5b8af52470c45bbc70adaede368473d2cea351b2a71af3450feaa444",
+      "method": "Formal Vanilla PINN",
+      "scientific_contract": {
+        "equation": "u_t + (u^2/2)_x = 0",
+        "domain": {
+          "x": [
+            -1.0,
+            1.0
+          ],
+          "t": [
+            0.0,
+            1.0
+          ]
+        },
+        "initial_condition": "u(x,0)=1 for x<0 and 0 for x>=0",
+        "boundary_condition": "u(-1,t)=1; u(1,t)=0",
+        "training_physics": "strong residual u_t+u u_x",
+        "analytical_entropy_solution": "x_s(t)=0.5t; excluded from optimizer losses",
+        "interpretation": "Direct inviscid strong-form baseline."
+      },
+      "configuration": {
+        "seed": 1234,
+        "x_min": -1.0,
+        "x_max": 1.0,
+        "t_min": 0.0,
+        "t_max": 1.0,
+        "shock_speed": 0.5,
+        "hidden_width": 64,
+        "hidden_layers": 8,
+        "activation": "Tanh",
+        "initial_points_per_side": 2048,
+        "boundary_points_per_side": 2048,
+        "pde_points": 16384,
+        "initial_points_per_side_batch": 64,
+        "boundary_points_per_side_batch": 64,
+        "pde_batch": 512,
+        "epochs": 1000,
+        "learning_rate_start": 0.001,
+        "learning_rate_min": 1e-05,
+        "evaluation_interval_epochs": 5,
+        "evaluation_x_points": 1001,
+        "evaluation_t_points": 101,
+        "inference_batch_size": 8192,
+        "global_viscosity": 0.0
+      },
+      "parameter_count": 29377,
+      "metrics": {
+        "evaluation_grid": {
+          "x_points": 1001,
+          "t_points": 101,
+          "domain": [
+            [
+              -1.0,
+              1.0
+            ],
+            [
+              0.0,
+              1.0
+            ]
+          ]
+        },
+        "analytical_solution_usage": "evaluation_only; excluded from training loss",
+        "relative_l2_fixed_grid": 0.15819869935512543,
+        "mean_absolute_error_fixed_grid": 0.05941672623157501,
+        "maximum_absolute_error_fixed_grid": 0.5215921998023987,
+        "shock_location_definition": "leftmost downward crossing of u_hat=0.5; nearest-value fallback if absent",
+        "mean_shock_location_absolute_error": 0.0011231260234490037,
+        "maximum_shock_location_absolute_error": 0.0019498765468597412,
+        "shock_thickness_definition": "absolute distance between u_hat=0.9 and u_hat=0.1 crossings",
+        "mean_predicted_shock_thickness": 0.41010794987843835,
+        "maximum_predicted_shock_thickness": 0.7186916470527649
+      },
+      "status": "Archived report values, not recomputed in this repository release."
+    },
+    {
+      "case": "formal_global_viscosity_nu_1e-3_8x64",
+      "source_identity": "PDF_PLOTTING_MIGRATION/manifests/pinn_burgers_formal/formal_global_viscosity_nu_1e-3_8x64.json",
+      "source_sha256": "75de5cbd09b066e7a0b05416f0260aed3a8e88688a13ea84df4ce688491da5e4",
+      "method": "Global Artificial-Viscosity PINN ($\\nu=0.001$)",
+      "scientific_contract": {
+        "equation": "u_t + (u^2/2)_x - 0.001 u_xx = 0",
+        "domain": {
+          "x": [
+            -1.0,
+            1.0
+          ],
+          "t": [
+            0.0,
+            1.0
+          ]
+        },
+        "initial_condition": "u(x,0)=1 for x<0 and 0 for x>=0",
+        "boundary_condition": "u(-1,t)=1; u(1,t)=0",
+        "training_physics": "strong residual u_t+u u_x-nu u_xx",
+        "analytical_entropy_solution": "x_s(t)=0.5t; excluded from optimizer losses",
+        "interpretation": "Regularized-model sensitivity run; inviscid entropy metrics are diagnostics, not same-PDE ranking metrics."
+      },
+      "configuration": {
+        "seed": 1234,
+        "x_min": -1.0,
+        "x_max": 1.0,
+        "t_min": 0.0,
+        "t_max": 1.0,
+        "shock_speed": 0.5,
+        "hidden_width": 64,
+        "hidden_layers": 8,
+        "activation": "Tanh",
+        "initial_points_per_side": 2048,
+        "boundary_points_per_side": 2048,
+        "pde_points": 16384,
+        "initial_points_per_side_batch": 64,
+        "boundary_points_per_side_batch": 64,
+        "pde_batch": 512,
+        "epochs": 1000,
+        "learning_rate_start": 0.001,
+        "learning_rate_min": 1e-05,
+        "evaluation_interval_epochs": 5,
+        "evaluation_x_points": 1001,
+        "evaluation_t_points": 101,
+        "inference_batch_size": 8192,
+        "global_viscosity": 0.001
+      },
+      "parameter_count": 29377,
+      "metrics": {
+        "evaluation_grid": {
+          "x_points": 1001,
+          "t_points": 101,
+          "domain": [
+            [
+              -1.0,
+              1.0
+            ],
+            [
+              0.0,
+              1.0
+            ]
+          ]
+        },
+        "analytical_solution_usage": "evaluation_only; excluded from training loss",
+        "relative_l2_fixed_grid": 0.024806519970297813,
+        "mean_absolute_error_fixed_grid": 0.0019441165495663881,
+        "maximum_absolute_error_fixed_grid": 0.554839015007019,
+        "shock_location_definition": "leftmost downward crossing of u_hat=0.5; nearest-value fallback if absent",
+        "mean_shock_location_absolute_error": 0.00022578801959753037,
+        "maximum_shock_location_absolute_error": 0.00048154592514038086,
+        "shock_thickness_definition": "absolute distance between u_hat=0.9 and u_hat=0.1 crossings",
+        "mean_predicted_shock_thickness": 0.008922510947450064,
+        "maximum_predicted_shock_thickness": 0.00899505615234375
+      },
+      "status": "Archived report values, not recomputed in this repository release."
+    }
+  ],
+  "limitations": [
+    "No archived checkpoint, numerical prediction array, or training-history CSV accompanies these local reports.",
+    "This release preserves existing visuals rather than regenerating their scientific content.",
+    "The viscous-model error is measured against the inviscid entropy reference; it is a diagnostic comparison, not a same-PDE ranking."
+  ],
+  "readme_previews": [
+    {
+      "file": "assets/figures/standard-solution-comparison.png",
+      "source_pdf": "assets/pdf/standard-solution-comparison.pdf",
+      "render_scale": 1.5,
+      "sha256": "6831ce623a8e237a0b2b233018cc7a3dab28c40e4b985680bc9ee3ceb0f69a50",
+      "layout_or_data_changed": false
+    },
+    {
+      "file": "assets/figures/standard-training-history.png",
+      "source_pdf": "assets/pdf/standard-training-history.pdf",
+      "render_scale": 1.5,
+      "sha256": "9e4a8e4093ad4384608422dc3b977b856dea2266ba9c1b5701f015f6c63b8d39",
+      "layout_or_data_changed": false
+    },
+    {
+      "file": "assets/figures/standard-training-points.png",
+      "source_pdf": "assets/pdf/standard-training-points.pdf",
+      "render_scale": 1.5,
+      "sha256": "58589f0074190cf498ca8683265fc63c7020e12bebbeb7de325c904deecb6269",
+      "layout_or_data_changed": false
+    }
+  ]
+}

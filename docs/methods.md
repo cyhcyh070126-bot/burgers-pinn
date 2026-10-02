@@ -1,0 +1,81 @@
+# Problem and methods
+
+## One Riemann problem
+
+The space-time domain is `x in [-1, 1]`, `t in [0, 1]`. Coordinates and
+solution values in this benchmark are dimensionless. The prescribed data are
+
+$$u(x,0)=\begin{cases}1 & x<0,\\0 & x\geq0,\end{cases}
+\qquad u(-1,t)=1,\quad u(1,t)=0.$$
+
+The inviscid entropy solution is a step moving along `x = t/2`:
+`u(x,t) = 1` for `x < t/2`, and `0` otherwise. The value on the discontinuity
+is fixed by this convention for grid diagnostics.
+
+## Standard PINN
+
+A fully connected network takes `(x,t)` and returns a scalar `u`.
+It has eight hidden layers of width 64, Tanh activations, Xavier-normal
+weights, zero biases, and 29,377 trainable parameters.
+
+Automatic differentiation supplies the strong-form residual
+
+$$r_0=u_t+u\,u_x.$$
+
+The objective is the equally weighted sum
+
+$$\mathcal L=\mathcal L_{\mathrm{IC}}+
+\mathcal L_{\mathrm{BC}}+\mathcal L_{\mathrm{PDE}},
+\qquad\mathcal L_{\mathrm{PDE}}=\operatorname{mean}(r_0^2).$$
+
+The IC and BC terms are MSEs against the prescribed initial and boundary
+values. The moving analytical shock is used for evaluation and illustration
+only; it is not supplied to the optimizer as interior training labels or an
+interface condition. A smooth network minimizing a pointwise residual is not
+guaranteed to recover the discontinuous entropy solution.
+
+## Global artificial-viscosity PINN
+
+This variant uses the same network, data pools, and loss weights, with
+
+$$r_\nu=u_t+u\,u_x-\nu u_{xx},\qquad\nu>0.$$
+
+The default is the constant `nu = 0.001`. This is global artificial viscosity:
+the coefficient is fixed, not learned or adapted in space or time.
+The regularization changes the PDE and smooths the shock. Comparison to the
+inviscid entropy solution measures a useful diagnostic discrepancy, including
+the regularization effect; it is not an error against an exact solution of
+the viscous PDE, or a same-PDE ranking against the standard PINN.
+
+## Shared training contract
+
+| Setting | Default |
+| --- | --- |
+| Seed | 1234 |
+| Initial pool | 2,048 points per side of the initial discontinuity |
+| Boundary pool | 2,048 time samples at each boundary |
+| Interior pool | 16,384 uniform space-time points |
+| Batch | 128 IC + 128 BC + 512 PDE points |
+| Epochs | 1,000 |
+| Updates | 32 per epoch, 32,000 total |
+| Optimizer | Adam |
+| Learning rate | Per-update cosine schedule, `1e-3` to `1e-5` |
+| Training-history diagnostic grid | 401 spatial by 81 temporal points |
+| Final evaluation grid | 1,001 spatial by 101 temporal points |
+
+Training pools are sampled once and shuffled each epoch. Every epoch sweeps
+the full pools. The final model is saved; the analytical evaluation error is
+not used to select a best checkpoint.
+
+## Reading the diagnostics
+
+Relative L2 and MAE are computed over the stated fixed grid. Maximum absolute
+error can remain large near a discontinuity even when most of the domain is
+accurate. Shock position is estimated from the leftmost downward crossing
+of `u = 0.5`; thickness is the distance between the `u = 0.9` and `u = 0.1`
+crossings. The archived estimator falls back to the nearest value when no
+crossing exists, so these numbers require inspection of the prediction.
+
+This repository contains one trained coordinate-network approach with two
+residual choices. It does not claim a neural operator that generalizes across
+different initial conditions.
