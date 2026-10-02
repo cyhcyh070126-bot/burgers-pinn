@@ -31,6 +31,15 @@ These animations are preserved from the author's personal homepage. Each has
 61 frames, a 960 by 900 pixel canvas, and a 100 ms frame duration. Their method
 labels and equations correspond to the archived result reports and experiment index.
 
+Read each animation as a sequence of spatial profiles from one trained model.
+The horizontal axis is position $x$ and the vertical axis is the scalar state
+$u$. The title reports physical time $t$, advancing from 0 to 1. **Blue shows
+the inviscid entropy solution; red shows the network prediction.** The blue
+step moves right from $x=0$ to $x=0.5$. The red curve shows both the predicted
+shock position and the shape of the transition between the two states.
+Playback illustrates physical evolution; training progress appears in the
+separate history figure below.
+
 ## Recorded diagnostics
 
 The archived reports evaluate a fixed grid of **1001 spatial points by 101 time
@@ -52,27 +61,104 @@ distance between the predicted 0.9 and 0.1 crossings. These are dimensionless
 quantities. Maximum pointwise error is sensitive to the discontinuity and should
 be read alongside the integrated and shock diagnostics.
 
+Relative $L^2$ is the Euclidean norm of the error over the full space-time grid,
+divided by the norm of the inviscid reference. Mean and maximum absolute errors
+also use that full grid. Shock-position and thickness summaries use the
+100 positive-time slices, $t=0.01,0.02,\ldots,1$; the initial profile at $t=0$
+is included in the field-error metrics. These complementary quantities
+describe the overall field, shock trajectory, and transition width.
+
 Both reports specify seed 1234, eight hidden layers of width 64 with Tanh
 activations, 29,377 trainable parameters, and 1000 training epochs. Fixed pools
 contain 4096 initial-condition, 4096 boundary-condition, and 16,384 PDE points.
-The batch sizes are 64 per initial-condition side, 64 per boundary-condition
-side, and 512 PDE points. The recorded learning-rate range is $10^{-3}$ to
-$10^{-5}$; evaluation occurs every five epochs.
+The batch sizes are 64 per initial-condition side, 64 per boundary, and 512
+interior collocation points: 768 points per optimizer update. The recorded
+learning-rate range is $10^{-3}$ to $10^{-5}$. The training-history diagnostic
+is evaluated at epoch 1, every five epochs, and the final epoch.
 
-## Original PDF figures
+## Reading the research figures
 
-The following original figures document the **Standard PINN** experiment:
+The following figures document the **standard PINN** experiment. In the
+preserved figure titles, “Formal Vanilla PINN” denotes this standard method.
+The PNG previews are page renderings of the linked original PDFs.
 
-- [Training history](../assets/pdf/standard-training-history.pdf): total loss,
-  IC/BC/PDE MSE, relative $L^2$ diagnostic, and learning rate.
-- [Solution comparison](../assets/pdf/standard-solution-comparison.pdf): profiles
-  at $t=0,0.25,0.5,0.75,1$.
-- [Training-point layout](../assets/pdf/standard-training-points.pdf): a displayed
-  subset of the fixed point pools, with the analytical shock path shown as a
-  dashed reference line.
+### Where the training information enters
+
+![Standard PINN initial, boundary, and interior training points](../assets/figures/standard-training-points.png)
+
+The horizontal axis is space and the vertical axis is time. **Orange squares**
+on $t=0$ carry the prescribed initial values. **Teal triangles** on $x=-1$ and
+$x=1$ carry the boundary values. **Blue dots** are interior coordinates at
+which the PDE residual is evaluated. The red dashed line $x=t/2$ shows the
+analytical reference trajectory.
+
+The plot displays 160 initial, 160 boundary, and 2,400 interior points for
+legibility. Training uses all 4,096 initial, 4,096 boundary, and 16,384 interior
+points in fixed pools, shuffled each epoch. The
+[training-batch description](methods.md#what-goes-into-a-training-batch)
+connects these three groups to the loss terms.
+[Open the original sampling-layout PDF](../assets/pdf/standard-training-points.pdf).
+
+### Training history: loss, reference error, and learning rate
+
+![Four-panel standard PINN training history](../assets/figures/standard-training-history.png)
+
+All panels share training epoch on the horizontal axis and use logarithmic
+vertical axes.
+
+| Panel | What is plotted | How to read it |
+| --- | --- | --- |
+| (a) Total loss, purple | Sum of the initial, boundary, and PDE-residual mean squared losses | Tracks the objective optimized by Adam; each point is an epoch average |
+| (b) Loss components | Initial loss in blue, boundary loss in orange, and interior residual loss in red | Shows how the three training constraints contribute to the total |
+| (c) Relative $L^2$, yellow | Prediction error against the inviscid reference on a 401 × 81 grid | Tracks agreement with the reference at diagnostic epochs; it is evaluated separately from the training objective |
+| (d) Learning rate, dashed green | Cosine schedule from `1e-3` to `1e-5` | Shows the optimizer step size recorded at the end of each epoch |
+
+The history figure follows optimization over epochs; the prediction animations
+follow the final learned solution over physical time. Read panels (a) and (b)
+together to relate the total objective to its components, then use panel (c)
+and the spatial profiles to examine the resulting field.
+[Open the original training-history PDF](../assets/pdf/standard-training-history.pdf).
+
+### Spatial profiles at five times
+
+![Standard PINN and inviscid entropy profiles at five physical times](../assets/figures/standard-solution-comparison.png)
+
+From left to right, the panels show $t=0,0.25,0.5,0.75,1$. Each panel queries
+the same trained network at a different time. The **blue step** is the
+inviscid entropy solution and the **red curve** is the standard PINN.
+
+The reference shock locations are $x=0,0.125,0.25,0.375,0.5$. Comparing these
+positions with the red curve's $u=0.5$ crossing illustrates the shock-location
+diagnostic. The horizontal distance between its $u=0.9$ and $u=0.1$ crossings
+illustrates predicted shock thickness. In this standard-PINN experiment, the
+learned transition becomes narrower at later physical times, as the panels
+and animation show.
+[Open the original profile-comparison PDF](../assets/pdf/standard-solution-comparison.pdf).
 
 The PDFs are unmodified, single-page originals with selectable text and their
 original layout and typography.
+
+## Reading a saved evaluation
+
+A new training or evaluation run writes `result.json` for scalar diagnostics
+and `evaluation_fields.npz` for the field values behind the profile plots.
+With the default final grid, the arrays have the following meanings:
+
+| Array | Shape | Meaning |
+| --- | --- | --- |
+| `x` | `(1001,)` | Spatial coordinates from −1 to 1 |
+| `t` | `(101,)` | Physical times from 0 to 1 |
+| `prediction` | `(101, 1001)` | Network values, indexed as `[time_index, space_index]` |
+| `truth` | `(101, 1001)` | Inviscid entropy reference on the same grid for either method |
+| `absolute_error` | `(101, 1001)` | Elementwise absolute difference between prediction and reference |
+
+For example, `prediction[50, :]` is the profile at $t=0.5$, plotted against
+`x`; `truth[50, :]` supplies its blue reference curve. The smaller smoke-test
+grid uses the same array ordering. Each saved checkpoint records its model
+configuration and sampled training points, so the evaluation command can
+reconstruct the corresponding field and point-layout plots.
+
+## Asset provenance
 
 The [provenance manifest](assets-provenance.json) records SHA-256 hashes for every
 copied asset and original result report, the selected configuration, and the
