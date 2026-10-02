@@ -44,13 +44,14 @@ parameters**, initialized with Xavier-normal weights and zero biases.
 
 | Method | Residual used in training |
 | --- | --- |
-| Standard PINN | $r=u_t+u\,u_x$ |
-| Global artificial viscosity | $r=u_t+u\,u_x-\nu u_{xx}$, default $\nu=10^{-3}$ |
+| Standard PINN | $r=u_t+u u_x$ |
+| Global artificial viscosity | $r=u_t+u u_x-\nu u_{xx}$, default $\nu=10^{-3}$ |
 
 Automatic differentiation computes the derivatives. Both methods minimize
 
-$$\mathcal L=\operatorname{MSE}_{\mathrm{IC}}+
-\operatorname{MSE}_{\mathrm{BC}}+\operatorname{mean}(r^2).$$
+```math
+\mathcal{L}=\mathrm{MSE}_{\mathrm{IC}}+\mathrm{MSE}_{\mathrm{BC}}+\mathrm{mean}(r^2)
+```
 
 All three terms have weight 1. Viscosity is fixed rather than learned or
 adapted. The analytical solution is excluded from optimizer losses and
