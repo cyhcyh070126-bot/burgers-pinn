@@ -4,7 +4,7 @@
 
 [Install](#install) · [Quick execution check](#quick-execution-check) · [Train and evaluate](#train-and-evaluate) · [Methods](docs/methods.md) · [Results](docs/results.md) · [Reproducibility](docs/reproducibility.md) · [Research homepage](https://cyhcyh070126-bot.github.io/)
 
-A PyTorch study of shock formation and propagation in a one-dimensional Burgers
+A PyTorch study of shock propagation in a one-dimensional Burgers
 Riemann problem. Two implementations share the same coordinate network and
 training data: a standard strong-form PINN and a PINN with constant global
 artificial viscosity.
@@ -29,8 +29,12 @@ when running again.
 | ![Standard PINN prediction](assets/gifs/standard-pinn.gif) | ![Artificial-viscosity PINN prediction](assets/gifs/artificial-viscosity-pinn.gif) |
 
 These research animations and the results below come from archived experiments.
-Both methods are compared with the **inviscid entropy solution**. For the
-artificial-viscosity method, this comparison measures the effect of regularization.
+Each frame shows the predicted spatial profile at the physical time printed
+above the axes; the animation advances through physical time, not training
+epochs. **Blue is the inviscid entropy solution; red is the network prediction.**
+The left animation uses the standard residual, and the right adds constant
+artificial viscosity. For the latter method, comparison with the inviscid
+reference serves as a regularization diagnostic.
 
 ## Problem and training data
 
@@ -43,10 +47,20 @@ The code generates its training data as fixed uniform pools of
 interior collocation points. Each epoch shuffles and sweeps these pools.
 The analytical shock solution is used only for diagnostics and plots.
 
+An individual training item is a coordinate pair $(x,t)$. Initial and boundary
+points also have a prescribed value of 0 or 1; interior points contribute through
+the PDE residual computed by automatic differentiation. One optimizer update
+uses **128 initial + 128 boundary + 512 interior points**. See
+[what goes into a training batch](docs/methods.md#what-goes-into-a-training-batch)
+for the coordinates, targets, and loss terms.
+
 ![Standard PINN training-point layout](assets/figures/standard-training-points.png)
 
-[Original sampling-layout PDF](assets/pdf/standard-training-points.pdf). The
-red shock path illustrates the analytical reference for the sampled domain.
+[Original sampling-layout PDF](assets/pdf/standard-training-points.pdf).
+Orange squares mark initial points at $t=0$, teal triangles mark boundary
+points at $x=\pm1$, and blue dots mark interior collocation points. The figure
+shows a readable subset of the fixed pools. The dashed red line marks the
+analytical shock path $x=t/2$ as a visual reference.
 
 ## Network and loss
 
@@ -86,6 +100,11 @@ residual; the analytical solution is reserved for evaluation. See
 ![Archived standard PINN training history](assets/figures/standard-training-history.png)
 
 [Original training-history PDF](assets/pdf/standard-training-history.pdf).
+Panels show **(a)** total training loss, **(b)** its initial, boundary, and
+PDE-residual components, **(c)** relative $L^2$ against the analytical reference,
+and **(d)** learning rate. All vertical axes use a logarithmic scale. Panel (a)
+is the sum of the three training terms in (b); panel (c) is an evaluation
+diagnostic.
 
 ## Research results
 
@@ -104,6 +123,12 @@ reference solution, source reports, and research figures.
 ![Archived standard PINN profiles](assets/figures/standard-solution-comparison.png)
 
 [Original profile-comparison PDF](assets/pdf/standard-solution-comparison.pdf).
+The five panels show the same trained standard PINN at
+$t=0,0.25,0.5,0.75,1$: the blue step is the inviscid reference, and the red
+curve is the prediction. Read the horizontal shift as shock propagation and
+the transition width as predicted shock thickness. The
+[illustrated results guide](docs/results.md#reading-the-research-figures)
+connects each figure to the reported diagnostics.
 
 ## Install
 
@@ -204,7 +229,10 @@ through the CLI options, which are listed by `python -m burgers_pinn.train --hel
 | `checkpoint_final.pt` | Final weights, full configuration, viscosity, sampled points, and smoke flag; training only |
 | `training_history.csv` | Per-epoch losses, learning rate, timing, and diagnostic relative L2; training only |
 | `result.json` | Completion status, configuration, device, and numerical metrics |
-| `evaluation_fields.npz` | `x`, `t`, `prediction`, `truth` (inviscid reference), and `absolute_error` arrays |
+| `evaluation_fields.npz` | Coordinate vectors `x`, `t`, plus `prediction`, `truth` (inviscid reference), and `absolute_error` arrays indexed by time, then space |
+
+See [reading a saved evaluation](docs/results.md#reading-a-saved-evaluation)
+for array shapes and the connection between field values and profile plots.
 
 To generate the original-style PDFs and GIF, install Times New Roman and omit
 `--skip-plots`. Training then also writes three PDFs (history, profiles, and
