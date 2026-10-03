@@ -1,7 +1,8 @@
 # Research results and visual provenance
 
-The figures and numbers on this page come from archived 1,000-epoch experiments.
-The repository includes their prediction animations, original PDF figures,
+The prediction figures and reported metrics come from archived 1,000-epoch
+experiments. Analytical-reference animations illustrate the prescribed problem.
+The repository includes prediction animations, original PDF figures,
 and recorded diagnostics. For a new experiment, use the full training commands
 in the [README](../README.md#train-and-evaluate).
 
@@ -24,6 +25,18 @@ along $x_s(t)=0.5t$. The reference is reserved for evaluation and visual
 comparison. For the artificial-viscosity PDE, the distance to this inviscid
 reference is a diagnostic of regularization. The GIF label “Exact solution”
 denotes this inviscid reference in both panels.
+
+## Analytical reference animations
+
+| Exact shock profile | Exact shock trajectory |
+| :---: | :---: |
+| ![Analytical inviscid solution over physical time](../assets/gifs/shock-motion.gif) | ![Analytical shock path x_s(t)=0.5t](../assets/gifs/shock-trajectory.gif) |
+
+These unchanged homepage GIFs show the reference from two perspectives. The
+profile view plots $u$ against $x$; the trajectory view plots $t$ against $x$.
+The discontinuity advances from $x=0$ to $x=0.5$ as time advances from 0 to 1.
+Both files contain 61 frames at 100 ms per frame, on a 960 by 900 pixel canvas.
+They provide the analytical baseline for the two learned solutions below.
 
 ## Preserved prediction animations
 
