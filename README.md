@@ -36,6 +36,19 @@ The left animation uses the standard residual, and the right adds constant
 artificial viscosity. For the latter method, comparison with the inviscid
 reference serves as a regularization diagnostic.
 
+## Analytical reference animations
+
+| Burgers shock motion | Burgers shock trajectory |
+| :---: | :---: |
+| ![Exact entropy-solution profile moving from x=0 to x=0.5](assets/gifs/shock-motion.gif) | ![Exact shock trajectory x_s(t)=0.5t in the space-time plane](assets/gifs/shock-trajectory.gif) |
+
+These two animations from the research homepage show the analytical inviscid
+reference used to interpret the predictions above. On the left, the blue step
+is the solution profile and the dashed red line marks its moving discontinuity.
+On the right, the teal dashed line is the full path $x_s(t)=0.5t$, the red
+segment and dot track its progress, and the orange line marks the current time.
+Both advance from $t=0$ to $t=1$ in 61 frames.
+
 ## What one experiment contains
 
 One experiment learns a continuous field from a prescribed Riemann problem.
@@ -89,6 +102,14 @@ shows a readable subset of the fixed pools. The dashed red line marks the
 analytical shock path $x=t/2$ as a visual reference.
 
 ## Network and loss
+
+![Burgers problem, coordinate network, automatic differentiation, and three PINN loss terms](assets/figures/pinn-problem-framework.png)
+
+The existing research-homepage diagram summarizes the standard PINN:
+coordinates enter a network, automatic differentiation forms the PDE residual,
+and initial, boundary, and residual losses train the same field. The network
+drawing is schematic; the implemented architecture is specified below.
+The artificial-viscosity variant adds $-\nu u_{xx}$ to the displayed residual.
 
 The network maps $(x,t)$ to a scalar $u_\theta(x,t)$ through **eight hidden
 layers of width 64**, Tanh activations, and a linear output. It has **29,377

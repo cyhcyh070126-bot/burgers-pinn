@@ -44,6 +44,19 @@ comparison to this inviscid reference describes the effect of regularization
 together with the learned approximation.
 [Open the original reference PDF](../assets/pdf/inviscid-shock-reference.pdf).
 
+### Watch the analytical reference evolve
+
+| Solution profile $u(x,t)$ | Shock trajectory in $(x,t)$ |
+| :---: | :---: |
+| ![Moving analytical Burgers shock profile](../assets/gifs/shock-motion.gif) | ![Analytical Burgers shock trajectory](../assets/gifs/shock-trajectory.gif) |
+
+The left animation plots state against position at the displayed physical time.
+The right plots time vertically and position horizontally: the teal dashed line
+is the complete path, the red segment and dot show the portion reached, and
+the orange line marks the current time. At $t=0.5$, both views locate the shock
+at $x=0.25$. They illustrate the same analytical reference used in the
+standard and artificial-viscosity prediction comparisons.
+
 ## 2. What one sample, batch, and experiment contain
 
 Here, a **training sample is a coordinate point with a constraint**. The code
@@ -95,6 +108,12 @@ output is `(N, 1)`. The eight hidden layers each have width 64 and use Tanh;
 the last layer is linear. The model has 29,377 trainable parameters.
 
 ## 3. How one update becomes a complete training run
+
+![Standard PINN problem and training framework from the research homepage](../assets/figures/pinn-problem-framework.png)
+
+Follow the diagram from $(x,t)$ to $u_\theta(x,t)$, then through the three loss
+branches to the optimizer. The hidden-layer sketch illustrates connectivity;
+the implemented network has the eight 64-unit layers specified above.
 
 For each batch, the network predicts the initial and boundary values.
 Automatic differentiation computes $u_t$ and $u_x$ at the interior points;

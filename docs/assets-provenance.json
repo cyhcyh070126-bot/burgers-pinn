@@ -127,6 +127,61 @@
           "STIXGeneral-Italic"
         ]
       }
+    },
+    {
+      "path": "assets/gifs/shock-motion.gif",
+      "source_identity": "Published personal-homepage asset: images/research/burgers_shock_motion.gif",
+      "method": "analytical_reference",
+      "description": "Animated inviscid entropy profile with states 1 and 0 and shock position x_s(t)=0.5t.",
+      "bytes": 555842,
+      "sha256": "a2e87f3e1c266c01fe95e510ca762666e7408acf47a3c8de5745af500b81da22",
+      "modification": "Unchanged byte-for-byte copy; destination filename only changed.",
+      "homepage_commit": "004938332cd4f263b1eb66604b587d480606ac98",
+      "animation": {
+        "size_px": [
+          960,
+          900
+        ],
+        "frame_count": 61,
+        "duration_ms": 100,
+        "loop": 0
+      },
+      "role": "Analytical reference for the prescribed problem; network prediction is shown separately."
+    },
+    {
+      "path": "assets/gifs/shock-trajectory.gif",
+      "source_identity": "Published personal-homepage asset: images/research/burgers_shock_trajectory.gif",
+      "method": "analytical_reference",
+      "description": "Animated analytical shock trajectory in the space-time plane; current time is marked in orange.",
+      "bytes": 345357,
+      "sha256": "e5c7aa20228e5d39f6c7fe9362862dd05b74a0dc6caf478da39d2e1b333843b1",
+      "modification": "Unchanged byte-for-byte copy; destination filename only changed.",
+      "homepage_commit": "1ef2bea3dad36cb7755ddce3e9f1a1244066dc84",
+      "animation": {
+        "size_px": [
+          960,
+          900
+        ],
+        "frame_count": 61,
+        "duration_ms": 100,
+        "loop": 0
+      },
+      "role": "Analytical reference for the prescribed problem; network prediction is shown separately."
+    },
+    {
+      "path": "assets/figures/pinn-problem-framework.png",
+      "source_identity": "Published personal-homepage asset: images/research/pinn_shock_problem_framework_v6.png",
+      "method": "standard",
+      "description": "Existing homepage schematic of the Riemann problem, coordinate network, automatic differentiation, and IC/BC/PDE losses.",
+      "bytes": 1508371,
+      "sha256": "97934f56511d97e598e86ddd1deecc47d3b7ecb6a7a45472dd5cf1d403aa90fd",
+      "modification": "Unchanged byte-for-byte copy; destination filename only changed.",
+      "homepage_commit": "8bc77495a07c0ad066049ea6dc86ef940965b7e0",
+      "size_px": [
+        1774,
+        887
+      ],
+      "role": "Method illustration; hidden-layer drawing is schematic. The code uses eight hidden layers of width 64. The artificial-viscosity method adds -nu*u_xx to the illustrated residual."
     }
   ],
   "archived_reports": [
