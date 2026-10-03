@@ -109,7 +109,9 @@ the last layer is linear. The model has 29,377 trainable parameters.
 
 ## 3. How one update becomes a complete training run
 
-![Standard PINN problem and training framework from the research homepage](../assets/figures/pinn-problem-framework.png)
+![Standard PINN problem, characteristics, and training framework from the research homepage](../assets/figures/pinn-problem-framework.svg)
+
+[Open the vector PDF](../assets/pdf/pinn-problem-framework.pdf).
 
 Follow the diagram from $(x,t)$ to $u_\theta(x,t)$, then through the three loss
 branches to the optimizer. The hidden-layer sketch illustrates connectivity;
