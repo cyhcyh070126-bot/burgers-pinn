@@ -103,12 +103,17 @@ analytical shock path $x=t/2$ as a visual reference.
 
 ## Network and loss
 
-![Burgers problem, coordinate network, automatic differentiation, and three PINN loss terms](assets/figures/pinn-problem-framework.png)
+![Burgers problem, characteristic lines, coordinate network, automatic differentiation, and three PINN loss terms](assets/figures/pinn-problem-framework.svg)
+
+[Vector SVG](assets/figures/pinn-problem-framework.svg) ·
+[PDF](assets/pdf/pinn-problem-framework.pdf) ·
+[PNG](assets/figures/pinn-problem-framework.png)
 
 The existing research-homepage diagram summarizes the standard PINN:
 coordinates enter a network, automatic differentiation forms the PDE residual,
 and initial, boundary, and residual losses train the same field. The network
 drawing is schematic; the implemented architecture is specified below.
+The three loss weights shown in the diagram are all set to 1 in this implementation.
 The artificial-viscosity variant adds $-\nu u_{xx}$ to the displayed residual.
 
 The network maps $(x,t)$ to a scalar $u_\theta(x,t)$ through **eight hidden

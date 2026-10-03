@@ -170,18 +170,42 @@
     },
     {
       "path": "assets/figures/pinn-problem-framework.png",
-      "source_identity": "Published personal-homepage asset: images/research/pinn_shock_problem_framework_v6.png",
+      "source_identity": "Rendered from published homepage PDF: files/research/pinn_shock_problem_framework_v8.pdf",
       "method": "standard",
-      "description": "Existing homepage schematic of the Riemann problem, coordinate network, automatic differentiation, and IC/BC/PDE losses.",
-      "bytes": 1508371,
-      "sha256": "97934f56511d97e598e86ddd1deecc47d3b7ecb6a7a45472dd5cf1d403aa90fd",
-      "modification": "Unchanged byte-for-byte copy; destination filename only changed.",
-      "homepage_commit": "8bc77495a07c0ad066049ea6dc86ef940965b7e0",
+      "description": "Version 8 homepage diagram: Burgers problem, characteristics, coordinate network, automatic differentiation, three weighted losses, and optimizer loop.",
+      "bytes": 337473,
+      "sha256": "d1e41813cc45b6fcde12a3201241224db635c16d883c9671fe56484e3c8f27c8",
+      "modification": "First PDF page rendered at 108 dpi with PyMuPDF; no layout or scientific content edits.",
+      "homepage_commit": "0432d1ad6a8add8230d38463efa93b611dde22fc",
       "size_px": [
-        1774,
-        887
+        2592,
+        1383
       ],
-      "role": "Method illustration; hidden-layer drawing is schematic. The code uses eight hidden layers of width 64. The artificial-viscosity method adds -nu*u_xx to the illustrated residual."
+      "role": "Standard-PINN method illustration; the hidden-layer drawing is schematic. This implementation uses eight hidden layers of width 64 and all three loss weights equal 1. The viscosity variant adds -nu*u_xx to the illustrated residual.",
+      "source_pdf": "assets/pdf/pinn-problem-framework.pdf",
+      "render_scale": 1.5
+    },
+    {
+      "path": "assets/figures/pinn-problem-framework.svg",
+      "source_identity": "Published personal-homepage asset: images/research/pinn_shock_problem_framework_v8.svg",
+      "method": "standard",
+      "description": "Version 8 homepage diagram: Burgers problem, characteristics, coordinate network, automatic differentiation, three weighted losses, and optimizer loop.",
+      "bytes": 215498,
+      "sha256": "c51016830bca86e8729e39a9133681d3d8c53301e7ece0428e0b3c2826d5a062",
+      "modification": "Unchanged byte-for-byte copy; destination filename only changed.",
+      "homepage_commit": "0432d1ad6a8add8230d38463efa93b611dde22fc",
+      "role": "Standard-PINN method illustration; the hidden-layer drawing is schematic. This implementation uses eight hidden layers of width 64 and all three loss weights equal 1. The viscosity variant adds -nu*u_xx to the illustrated residual."
+    },
+    {
+      "path": "assets/pdf/pinn-problem-framework.pdf",
+      "source_identity": "Published personal-homepage asset: files/research/pinn_shock_problem_framework_v8.pdf",
+      "method": "standard",
+      "description": "Version 8 homepage diagram: Burgers problem, characteristics, coordinate network, automatic differentiation, three weighted losses, and optimizer loop.",
+      "bytes": 79797,
+      "sha256": "474eafe8c1324c2c1f10e0fa2fbfbfe9aa7377cad90ca3498af5021efdb35afa",
+      "modification": "Unchanged byte-for-byte copy; destination filename only changed.",
+      "homepage_commit": "0432d1ad6a8add8230d38463efa93b611dde22fc",
+      "role": "Standard-PINN method illustration; the hidden-layer drawing is schematic. This implementation uses eight hidden layers of width 64 and all three loss weights equal 1. The viscosity variant adds -nu*u_xx to the illustrated residual."
     }
   ],
   "archived_reports": [
