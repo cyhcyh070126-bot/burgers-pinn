@@ -190,11 +190,12 @@
       "source_identity": "Published personal-homepage asset: images/research/pinn_shock_problem_framework_v8.svg",
       "method": "standard",
       "description": "Version 8 homepage diagram: Burgers problem, characteristics, coordinate network, automatic differentiation, three weighted losses, and optimizer loop.",
-      "bytes": 215498,
-      "sha256": "c51016830bca86e8729e39a9133681d3d8c53301e7ece0428e0b3c2826d5a062",
-      "modification": "Unchanged byte-for-byte copy; destination filename only changed.",
+      "bytes": 209103,
+      "sha256": "34702e65ad1ff4b63d4e7342c3be39a6529a2aecdb96bfedce68ea9b72233e3d",
+      "modification": "Filename changed; Git normalized text line endings to LF. SVG drawing content is unchanged.",
       "homepage_commit": "0432d1ad6a8add8230d38463efa93b611dde22fc",
-      "role": "Standard-PINN method illustration; the hidden-layer drawing is schematic. This implementation uses eight hidden layers of width 64 and all three loss weights equal 1. The viscosity variant adds -nu*u_xx to the illustrated residual."
+      "role": "Standard-PINN method illustration; the hidden-layer drawing is schematic. This implementation uses eight hidden layers of width 64 and all three loss weights equal 1. The viscosity variant adds -nu*u_xx to the illustrated residual.",
+      "source_copy_sha256": "c51016830bca86e8729e39a9133681d3d8c53301e7ece0428e0b3c2826d5a062"
     },
     {
       "path": "assets/pdf/pinn-problem-framework.pdf",
