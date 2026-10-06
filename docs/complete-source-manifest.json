@@ -1,0 +1,55 @@
+{
+  "audited_on": "2026-10-06",
+  "description": "All in-scope original code files; original bytes and separately patched research copies. Excluded experiment files are inventoried without publishing their code.",
+  "files": [
+    {
+      "path": "pinn_burgers_common_plotting.py",
+      "bytes": 49150,
+      "sha256": "156f7f4418d34d1376374b576311b9d7c07a52aa9940a56501c2f14390ac7358",
+      "archive": "source_archive/pinn_burgers_common_plotting.py",
+      "research_copy": "research_scripts/pinn_burgers_common_plotting.py",
+      "research_sha256": "62253ba6875d1c76b67d45e95c090a57646484ed0c0bc85561c0e94aa7883561",
+      "selected_main_source": true,
+      "fixes": [
+        "Filter run-specific viscosity metadata when reconstructing TrainingConfig; label the actual saved viscosity, preserving layout."
+      ]
+    },
+    {
+      "path": "pinn_burgers_dd_plotting.py",
+      "bytes": 17786,
+      "sha256": "b1a1c087f233c2e7eefceb6f66d55989aaafbc3fd3fcc8e77b76e0a981776be1",
+      "archive": "source_archive/pinn_burgers_dd_plotting.py",
+      "research_copy": "research_scripts/pinn_burgers_dd_plotting.py",
+      "research_sha256": "531503274f61c8d6bc49ff298b5729d1b07d54ec293902825cd05183ab117561",
+      "selected_main_source": false,
+      "fixes": [
+        "Resolve original module imports to their actual archived filenames.",
+        "Reject partial XPINN pool sweeps; original 32-batch defaults unchanged."
+      ]
+    },
+    {
+      "path": "pinn_burgers_formal_rebuild.py",
+      "bytes": 15978,
+      "sha256": "e6a097b7a622d8b0a6eeacbfe892617be384f0eca2df6f973d1724ee4328478d",
+      "archive": "source_archive/pinn_burgers_formal_rebuild.py",
+      "research_copy": "research_scripts/pinn_burgers_formal_rebuild.py",
+      "research_sha256": "75353e367b95b5a266d86d338e8903eac32cc07b8a503e283aa797c8514cfda6",
+      "selected_main_source": true,
+      "fixes": [
+        "Resolve original module imports to their actual archived filenames."
+      ]
+    },
+    {
+      "path": "pinn_burgers_shock_reference.py",
+      "bytes": 11989,
+      "sha256": "2e031c905b421085507abe2a79c429a41d04f28c5f2551b186a992098b363d5f",
+      "archive": "source_archive/pinn_burgers_shock_reference.py",
+      "research_copy": "research_scripts/pinn_burgers_shock_reference.py",
+      "research_sha256": "2e031c905b421085507abe2a79c429a41d04f28c5f2551b186a992098b363d5f",
+      "selected_main_source": false,
+      "fixes": []
+    }
+  ],
+  "excluded": [],
+  "companion_aliases": []
+}

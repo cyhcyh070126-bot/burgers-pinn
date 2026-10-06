@@ -2,3 +2,5 @@
 *.png binary
 *.gif binary
 *.pdf binary
+source_archive/** -text
+research_scripts/** -text

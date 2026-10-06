@@ -1,0 +1,20 @@
+--- source_archive/pinn_burgers_dd_plotting.py
++++ research_scripts/pinn_burgers_dd_plotting.py
+@@ -25,7 +25,7 @@
+ import torch
+ from torch import Tensor, nn
+ 
+-from vanilla_burgers_pinn_baseline import (
++from pinn_burgers_common_plotting import (
+     TrainingConfig,
+     VanillaBurgersPINN,
+     burgers_residual,
+@@ -63,7 +63,7 @@
+             self.pde_points_per_subdomain // self.pde_batch_per_subdomain,
+             self.interface_points // self.interface_batch,
+         )
+-        if len(set(counts)) != 1 or any(value != 32 for value in counts):
++        if len(set(counts)) != 1 or any(value != 32 for value in counts) or any((self.initial_points_per_side % self.initial_points_per_side_batch, self.boundary_points_per_side % self.boundary_points_per_side_batch, self.pde_points_per_subdomain % self.pde_batch_per_subdomain, self.interface_points % self.interface_batch)):
+             raise ValueError(f"XPINN pools must form 32 complete batches, got {counts}")
+         return counts[0]
+ 

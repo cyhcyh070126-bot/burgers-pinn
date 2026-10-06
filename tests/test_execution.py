@@ -11,12 +11,23 @@ from pathlib import Path
 from unittest.mock import patch
 
 import numpy as np
+import torch
 
 from burgers_pinn import evaluate, train
 from burgers_pinn.runtime import smoke_config
 
 
 class ExecutionTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        # patch.dict restores its complete sys.modules snapshot on exit. Load
+        # Adam's lazy backend first so subsequent tests do not re-register its
+        # native operators after the Python module cache is restored.
+        parameter = torch.nn.Parameter(torch.ones(1))
+        optimizer = torch.optim.Adam([parameter])
+        parameter.sum().backward()
+        optimizer.step()
+
     def test_training_and_evaluation_work_without_plotting_and_preserve_metadata(self):
         # Block the plotting module entirely: numerical use must not need its
         # font, Matplotlib, or PDF imports. Only the full-run budget is reduced.

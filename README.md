@@ -311,6 +311,11 @@ uses a saved model to generate predictions and metrics.
 
 ## Documentation
 
+The [complete original-source audit](docs/source-audit.md) records all four
+author-provided Burgers scripts, their hashes, separate roles and minimal fixes.
+Original bytes are in `source_archive/`; reviewed historical versions are in
+`research_scripts/`. The portable scalar workflow above remains the main entry.
+
 | Guide | What it covers |
 | :--- | :--- |
 | [Illustrated experiment guide](docs/experiment-guide.md) | One experiment from problem setup to saved predictions |
@@ -323,6 +328,8 @@ uses a saved model to generate predictions and metrics.
 
 ```text
 burgers_pinn/   Model, sampling, residuals, training, evaluation, original plotting
+source_archive/ Exact original source snapshots
+research_scripts/ Reviewed original research and reference scripts
 configs/       Recorded formal defaults
 tests/         Numerical and execution-contract checks
 assets/        Preserved research GIFs/PDFs and PDF previews for this README

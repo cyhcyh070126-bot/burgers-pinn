@@ -1,0 +1,31 @@
+--- source_archive/pinn_burgers_common_plotting.py
++++ research_scripts/pinn_burgers_common_plotting.py
+@@ -1150,7 +1150,7 @@
+         method_label = "Artificial-Viscosity PINN"
+         equation_label = (
+             r"$\frac{\partial u}{\partial t}+u\frac{\partial u}{\partial x}"
+-            r"-\nu\frac{\partial^2u}{\partial x^2}=0,\quad \nu=10^{-3}$"
++            r"-\nu\frac{\partial^2u}{\partial x^2}=0,\quad \nu=" + f"{viscosity:g}" + "$"
+         )
+         main_title = "Regularized Burgers Equation"
+     else:
+@@ -1198,7 +1198,8 @@
+         metadata = json.load(handle)
+     if not metadata.get("completed"):
+         raise RuntimeError(f"Candidate is not marked completed: {candidate_dir}")
+-    config = TrainingConfig(**metadata["configuration"])
++    config_names = {field.name for field in fields(TrainingConfig)}
++    config = TrainingConfig(**{key: value for key, value in metadata["configuration"].items() if key in config_names})
+     device = require_cuda()
+     # The original sequence seeds, initializes the model, then samples fixed pools.
+     # Replaying that exact sequence recovers the training coordinates without retraining.
+@@ -1229,7 +1230,8 @@
+         metadata = json.load(handle)
+     if not metadata.get("completed"):
+         raise RuntimeError(f"Candidate is not marked completed: {candidate_dir}")
+-    config = TrainingConfig(**metadata["configuration"])
++    config_names = {field.name for field in fields(TrainingConfig)}
++    config = TrainingConfig(**{key: value for key, value in metadata["configuration"].items() if key in config_names})
+     device = require_cuda()
+     set_reproducible_seed(config.seed)
+     VanillaBurgersPINN(config).to(device)

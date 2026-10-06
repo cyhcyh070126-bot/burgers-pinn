@@ -1,0 +1,382 @@
+{
+  "reviewed_on": "2026-10-06",
+  "files": [
+    {
+      "path": "pinn_burgers_common_plotting.py",
+      "role": "Standard Burgers PINN configuration, network, fixed sampling pools, residual, optimizer and original plots/GIFs. Filter run metadata when rebuilding config and label actual viscosity.",
+      "selected_before_audit": true,
+      "sha256": "156f7f4418d34d1376374b576311b9d7c07a52aa9940a56501c2f14390ac7358",
+      "fixes": [
+        "Filter run-specific viscosity metadata when reconstructing TrainingConfig; label the actual saved viscosity, preserving layout."
+      ],
+      "definitions": [
+        {
+          "name": "TrainingConfig",
+          "line": 58,
+          "ast_sha256": "84a3051bf2a263dd97ef86c04bee93f21d8a9a7e4ae9cd0a4e7a6f8e1e02b269"
+        },
+        {
+          "name": "VanillaBurgersPINN",
+          "line": 128,
+          "ast_sha256": "c3d741edc92b6f156d8e8a2da3369774e764d1467c3da58ba4996bcf9d644cca"
+        },
+        {
+          "name": "require_cuda",
+          "line": 153,
+          "ast_sha256": "cc4d16ebc208f1ba2c811080ffa2b01339687775e6a31b42cb910040cf56ac62"
+        },
+        {
+          "name": "set_reproducible_seed",
+          "line": 169,
+          "ast_sha256": "1ef2b867750cb101f3d46bbd5b8399aa06d6eb5c3fd61b8331ae49a2dc0a12bf"
+        },
+        {
+          "name": "uniform_points",
+          "line": 175,
+          "ast_sha256": "6c932217714c91c8be6eced9a2398b19dd2a59221b3d9c6dd9c305ee16bf1196"
+        },
+        {
+          "name": "build_fixed_training_points",
+          "line": 179,
+          "ast_sha256": "43982513cb6977b9c447438cf85382ca6729f62441f7dbb34cb26672fcd87e23"
+        },
+        {
+          "name": "fixed_epoch_permutations",
+          "line": 205,
+          "ast_sha256": "94323665a69fdb374b1db8da10fd72bdaa0380a0eab80277c0265b2c3c64fb6f"
+        },
+        {
+          "name": "fixed_training_batch",
+          "line": 218,
+          "ast_sha256": "e663fd4731288145abc7a9fbe268b9e09bf1702a0d6f6d3526b02755bf61a1bd"
+        },
+        {
+          "name": "burgers_residual",
+          "line": 268,
+          "ast_sha256": "68935687100384487b35411afa8e20515a63665d9cf507e455cfd6d5aea4b3c4"
+        },
+        {
+          "name": "exact_entropy_solution",
+          "line": 290,
+          "ast_sha256": "342430810ce2588aa3e493ae4fbe88779ccc3771aeb9a8a707f141e66d1c3eea"
+        },
+        {
+          "name": "predict_in_batches",
+          "line": 298,
+          "ast_sha256": "bc3d285a2579c8137313d49d14af260b2670a2225f332e6f8f1607bcb338305e"
+        },
+        {
+          "name": "relative_l2_on_fixed_grid",
+          "line": 309,
+          "ast_sha256": "5726c87becbecdd4e25329bc33be7023305e361f08f50324e22374df0ec41f59"
+        },
+        {
+          "name": "cosine_learning_rate",
+          "line": 325,
+          "ast_sha256": "9031cddb009b1c56e730a33f012fbc22dcfe8721342b396d95114dae426947f1"
+        },
+        {
+          "name": "train_baseline",
+          "line": 337,
+          "ast_sha256": "39e719881f3bc920397e73283e533ea74ef495c2155900edc66a56c4c824966d"
+        },
+        {
+          "name": "estimate_level_crossing",
+          "line": 409,
+          "ast_sha256": "25ae84b5642d7727dbe2b0b5df06c7af8eee4920f2e75e180810d0bcedb165ed"
+        },
+        {
+          "name": "evaluate_final_model",
+          "line": 424,
+          "ast_sha256": "b49f2719598d852dda461a4301c745a290dacafb2488de36b45deb69c5f779b3"
+        },
+        {
+          "name": "configure_typography",
+          "line": 491,
+          "ast_sha256": "3a0b50d401472b198cb1f94608822b97e4adc127dac9d15b8561102469aeac48"
+        },
+        {
+          "name": "style_history_axis",
+          "line": 522,
+          "ast_sha256": "15d235699dea040ecf7c9fc13cfd0d63078fd52921f965c955dbc65cceb55086"
+        },
+        {
+          "name": "validate_pdf",
+          "line": 539,
+          "ast_sha256": "b70773c66118e0f3eac3e4de963c2fdbe4b1a6ad1234a4a7986c45bd944b772e"
+        },
+        {
+          "name": "save_training_history_pdf",
+          "line": 583,
+          "ast_sha256": "0c35d94f8e759864fd2b7f03eacd4500c47029b12a1e977cf9f522d3b47084de"
+        },
+        {
+          "name": "save_solution_comparison_pdf",
+          "line": 657,
+          "ast_sha256": "e617e3c72b684acbdc3c2167caedc93933d67ec5dd97b91345a1192263afa355"
+        },
+        {
+          "name": "_representative_subset",
+          "line": 734,
+          "ast_sha256": "2d5fb81188256f5ba51a25c6b7711bab38004a3026460493ba3812d629253c90"
+        },
+        {
+          "name": "save_training_point_layout_pdf",
+          "line": 741,
+          "ast_sha256": "bc0c1e5777adc50009858557423b8f5c887a60bbe9da6230aabe0d4312b8e52a"
+        },
+        {
+          "name": "save_solution_animation_gif",
+          "line": 861,
+          "ast_sha256": "e9cd7e962e6114c7332e86dfd95f004c5fa67d23c4695947202732ba51a96173"
+        },
+        {
+          "name": "write_history_csv",
+          "line": 977,
+          "ast_sha256": "a8890df2f0d252809a8773200e7e1455cceeb893aaeeade3773a90175ebadc90"
+        },
+        {
+          "name": "read_history_csv",
+          "line": 984,
+          "ast_sha256": "905afc1b486161badfe3e2c0b29358c9f2bd1e179f640b80c5e6854a18b7684e"
+        },
+        {
+          "name": "build_run_metadata",
+          "line": 992,
+          "ast_sha256": "1083b9f6f9dbc79e40663230983366f43479cc1266307918426dca64e1ad41bd"
+        },
+        {
+          "name": "main",
+          "line": 1040,
+          "ast_sha256": "625d8febcbdf272169922765e6a95f977cc110a7cdfa89777f4b8d71de480bdd"
+        },
+        {
+          "name": "rerender_history_candidate",
+          "line": 1093,
+          "ast_sha256": "4f5332e0aa68cee451b8435adb4ab2d0ec9433ecbc670a5c3710fd3bc7dfd4bc"
+        },
+        {
+          "name": "render_candidate_animation",
+          "line": 1121,
+          "ast_sha256": "5d6e1e0b6652a3ee4633e2a944afc06734d9a0fb2f229d41db47dd9c9bf8cdd7"
+        },
+        {
+          "name": "render_candidate_training_point_layout",
+          "line": 1189,
+          "ast_sha256": "f639c5785114720bc32669a50d61d62ddc0d33767e9d63b14c404e7b58459e2f"
+        },
+        {
+          "name": "render_candidate_dense_training_point_layout",
+          "line": 1220,
+          "ast_sha256": "95ea1b098c052041b4fd969b1798c6a1d13e8eb04c1139fbfee1fbf94ee415dc"
+        }
+      ],
+      "literal_settings": {
+        "ANIMATION_FRAME_COUNT": 61,
+        "ANIMATION_FPS": 10,
+        "ANIMATION_DPI": 120
+      },
+      "validation": "Original and patched Python syntax checked; numerical regression only where explicitly recorded below."
+    },
+    {
+      "path": "pinn_burgers_dd_plotting.py",
+      "role": "Historical prescribed-interface domain-decomposition PINN. Interface x=0.5t is supplied analytically; no automatic shock-discovery claim. Reject partial point-pool sweeps.",
+      "selected_before_audit": false,
+      "sha256": "b1a1c087f233c2e7eefceb6f66d55989aaafbc3fd3fcc8e77b76e0a981776be1",
+      "fixes": [
+        "Resolve original module imports to their actual archived filenames.",
+        "Reject partial XPINN pool sweeps; original 32-batch defaults unchanged."
+      ],
+      "definitions": [
+        {
+          "name": "XPINNConfig",
+          "line": 50,
+          "ast_sha256": "09c4d4218e0c7ca7724c6fcee2dd5315b10cf3a13b6ebd71d53180e28d695d9e"
+        },
+        {
+          "name": "uniform",
+          "line": 78,
+          "ast_sha256": "3226bdbe0d65ab7693efeb4453e6af00d891d328c087f0574e7938fb4870506e"
+        },
+        {
+          "name": "build_pools",
+          "line": 82,
+          "ast_sha256": "fa68c203ed888b74ecb9b5eae2fdec456fe412e3ecfb5c147758996ec37fd368"
+        },
+        {
+          "name": "batch",
+          "line": 102,
+          "ast_sha256": "c2373a413eac693b877d98f742d97952641893c90213419001bb2f826f8b1cb2"
+        },
+        {
+          "name": "learning_rate",
+          "line": 158,
+          "ast_sha256": "04ef432ae54c2aac7556ee4a2267cf1c8517e5037546dba11f05542bbfe0b625"
+        },
+        {
+          "name": "evaluate",
+          "line": 166,
+          "ast_sha256": "539cc6b5222a7939905583f48f841cb9c8d94d1de6c73b03331cadefb690fff9"
+        },
+        {
+          "name": "save_history",
+          "line": 215,
+          "ast_sha256": "63376bfb4169c37a149a1184a4f417031441874f0f4402510e8546e2a7255ded"
+        },
+        {
+          "name": "save_layout",
+          "line": 272,
+          "ast_sha256": "8e3a8c62078afde128b94ecf434ab84027caa6e3fa40d141d0ffb0bd90dad2c3"
+        },
+        {
+          "name": "main",
+          "line": 348,
+          "ast_sha256": "40db7c9fc27abe4b20cfeb6f0e2eb60d2921f6d617c4f4979e8a2a5ce0b8ca01"
+        }
+      ],
+      "literal_settings": {},
+      "validation": "Original and patched Python syntax checked; numerical regression only where explicitly recorded below."
+    },
+    {
+      "path": "pinn_burgers_formal_rebuild.py",
+      "role": "Controlled standard/artificial-viscosity reruns and prescribed-interface check. Repair imports to the actual original filenames; residual and optimizer parity verified.",
+      "selected_before_audit": true,
+      "sha256": "e6a097b7a622d8b0a6eeacbfe892617be384f0eca2df6f973d1724ee4328478d",
+      "fixes": [
+        "Resolve original module imports to their actual archived filenames."
+      ],
+      "definitions": [
+        {
+          "name": "require_new_directory",
+          "line": 46,
+          "ast_sha256": "2d919e9b5b87d185ed428cc4fdd00ba0e5b919a10f7a5a75ba436572cfdff8c9"
+        },
+        {
+          "name": "completed_directory",
+          "line": 53,
+          "ast_sha256": "d6f7236cfe4f5aeabf0d4de60168bc75f421d54bf93f613f4b58c180997fd70e"
+        },
+        {
+          "name": "scalar_residual",
+          "line": 71,
+          "ast_sha256": "dedf84ee1160feed53e71bfb5e7caacc79274fc4d30490962e45f7ec717fd4a9"
+        },
+        {
+          "name": "train_scalar",
+          "line": 105,
+          "ast_sha256": "4933702a86a20741a96cb47a6029d7eaa4cff08457beb5724c4a0d07c6fa3ea6"
+        },
+        {
+          "name": "scalar_metadata",
+          "line": 156,
+          "ast_sha256": "a172c95cd687c15425cdf0244e137e38e9d1966953bc9a1906526b77e3691715"
+        },
+        {
+          "name": "run_scalar",
+          "line": 194,
+          "ast_sha256": "04d6f2897e37080516157bec1311198e7a93bcfbf03f0fcf4c365e6ba7221c3c"
+        },
+        {
+          "name": "run_prescribed_interface",
+          "line": 231,
+          "ast_sha256": "d49bee3a1a2f91624dce71973a7236b8c2dafa85333c15b7a651073199ddb107"
+        },
+        {
+          "name": "main",
+          "line": 298,
+          "ast_sha256": "b7117808be64d5872b7c32ef15ba284ff07587935a43bb617d425bb1efbd12f9"
+        }
+      ],
+      "literal_settings": {
+        "GLOBAL_VISCOSITIES": [
+          0.001,
+          0.003,
+          0.01
+        ]
+      },
+      "validation": "Original and patched Python syntax checked; numerical regression only where explicitly recorded below."
+    },
+    {
+      "path": "pinn_burgers_shock_reference.py",
+      "role": "Exact inviscid entropy-solution reference rendering and PDF/GIF checks; analytical visualization, not a trained prediction.",
+      "selected_before_audit": false,
+      "sha256": "2e031c905b421085507abe2a79c429a41d04f28c5f2551b186a992098b363d5f",
+      "fixes": [],
+      "definitions": [
+        {
+          "name": "configure_typography",
+          "line": 61,
+          "ast_sha256": "1596d9898d22793514021e76f272f6246383f3cef5adf5bf39a1822b17d90572"
+        },
+        {
+          "name": "entropy_solution",
+          "line": 93,
+          "ast_sha256": "02954c1e4a9fe021b03aaa30734a69268715520bf9a44c7af45696fc7e5f3d61"
+        },
+        {
+          "name": "style_axis",
+          "line": 98,
+          "ast_sha256": "5a35cdf65b506cfc41ca6cbd1fd47d007aba6312efcda0e3843b6d4fa28bd0d8"
+        },
+        {
+          "name": "build_figure",
+          "line": 114,
+          "ast_sha256": "bae7f14bf3b78e50446bf6f74b8a503e9063b611ebeab54e15b56716a9f13842"
+        },
+        {
+          "name": "validate_pdf",
+          "line": 267,
+          "ast_sha256": "3ed1192f6adb941d5bfa3f43be175ee9c571cb5c6121bded760c2796f30ce977"
+        },
+        {
+          "name": "validate_gif",
+          "line": 306,
+          "ast_sha256": "f1d308490526c4fa6119bec8f7c6551b84e7450b1fe3cb9e70bb7425f642d952"
+        },
+        {
+          "name": "save_pdf_preview",
+          "line": 321,
+          "ast_sha256": "34eac6e505c3b9cf67750c17182fa3bb4428adc72a7859109ad6e33d3b756f4f"
+        },
+        {
+          "name": "save_frame_previews",
+          "line": 328,
+          "ast_sha256": "f92e11ae4658eca8e88d3013433a2c3af2758303d050612a7a61f1724b9b32a8"
+        },
+        {
+          "name": "main",
+          "line": 347,
+          "ast_sha256": "75bb62e69703013ec8f06cf2b48ef3a48511af81e3949945937ce166a20da458"
+        }
+      ],
+      "literal_settings": {
+        "SHOCK_SPEED": 0.5,
+        "T_FINAL": 1.0,
+        "REFERENCE_TIME": 0.5,
+        "N_FRAMES": 61,
+        "FPS": 10,
+        "GIF_DPI": 120,
+        "FIGURE_SIZE": [
+          13.333,
+          7.5
+        ],
+        "SPLIT_FIGURE_SIZE": [
+          8.0,
+          7.5
+        ],
+        "MAIN_TITLE_SIZE": 24,
+        "INFORMATION_SIZE": 30,
+        "PANEL_TITLE_SIZE": 20,
+        "AXIS_LABEL_SIZE": 17,
+        "TICK_LABEL_SIZE": 14,
+        "LEGEND_SIZE": 14,
+        "ANNOTATION_SIZE": 15,
+        "SOLUTION_COLOR": "#2F6BBD",
+        "SHOCK_COLOR": "#D1495B",
+        "TIME_COLOR": "#F28E2B",
+        "REFERENCE_COLOR": "#2A9D8F"
+      },
+      "validation": "Original and patched Python syntax checked; numerical regression only where explicitly recorded below."
+    }
+  ]
+}

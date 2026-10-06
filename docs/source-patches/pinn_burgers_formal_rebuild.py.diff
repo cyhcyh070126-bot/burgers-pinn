@@ -1,0 +1,13 @@
+--- source_archive/pinn_burgers_formal_rebuild.py
++++ research_scripts/pinn_burgers_formal_rebuild.py
+@@ -22,8 +22,8 @@
+ import torch
+ from torch import Tensor, nn
+ 
+-import vanilla_burgers_pinn_baseline as common
+-import xpinn_burgers_suite as prescribed_dd
++import pinn_burgers_common_plotting as common
++import pinn_burgers_dd_plotting as prescribed_dd
+ 
+ 
+ PINN_DIR = Path(__file__).resolve().parents[1]
