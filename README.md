@@ -37,12 +37,24 @@ The dimensionless domain is $x\in[-1,1]$, $t\in[0,1]$. The initial state is 1
 to the left of zero and 0 to the right. Boundary values remain 1 at the left
 boundary and 0 at the right. The inviscid entropy shock moves along $x=t/2$.
 
-![Analytical inviscid shock profiles and trajectory](assets/figures/inviscid-shock-reference.png)
+### Analytical reference animations
 
-This original analytical reference figure shows the moving step at $t=0.5$
-and its path through space and time; the shock is at $x=0.25$. It defines the
-reference used in the prediction plots.
-[Open the original PDF](assets/pdf/inviscid-shock-reference.pdf).
+| Burgers shock motion | Burgers shock trajectory |
+| :---: | :---: |
+| ![Exact entropy-solution profile moving from x=0 to x=0.5](assets/gifs/shock-motion.gif) | ![Exact shock trajectory x_s(t)=0.5t in the space-time plane](assets/gifs/shock-trajectory.gif) |
+
+These two animations from the research homepage show the analytical inviscid
+reference used to interpret the model predictions. On the left, the blue step
+is the solution profile and the dashed red line marks its moving discontinuity.
+On the right, the teal dashed line is the full path $x_s(t)=0.5t$, the red
+segment and dot track its progress, and the orange line marks the current time.
+Both advance from $t=0$ to $t=1$ in 61 frames.
+
+[Original static figure](assets/figures/inviscid-shock-reference.png) ·
+[Original PDF](assets/pdf/inviscid-shock-reference.pdf). The static reference
+shows $t=0.5$, when the shock is at $x=0.25$.
+
+### Training-point generation
 
 An individual training item is a coordinate pair $(x,t)$. The code generates
 fixed, uniformly sampled point pools and shuffles them during each epoch.
@@ -66,19 +78,6 @@ Orange squares mark initial points at $t=0$, teal triangles mark boundary
 points at $x=\pm1$, and blue dots mark interior collocation points. The figure
 shows a readable subset of the fixed pools. The dashed red line marks the
 analytical shock path $x=t/2$ as a visual reference.
-
-## Analytical reference animations
-
-| Burgers shock motion | Burgers shock trajectory |
-| :---: | :---: |
-| ![Exact entropy-solution profile moving from x=0 to x=0.5](assets/gifs/shock-motion.gif) | ![Exact shock trajectory x_s(t)=0.5t in the space-time plane](assets/gifs/shock-trajectory.gif) |
-
-These two animations from the research homepage show the analytical inviscid
-reference used to interpret the model predictions. On the left, the blue step
-is the solution profile and the dashed red line marks its moving discontinuity.
-On the right, the teal dashed line is the full path $x_s(t)=0.5t$, the red
-segment and dot track its progress, and the orange line marks the current time.
-Both advance from $t=0$ to $t=1$ in 61 frames.
 
 ## Network and loss
 
