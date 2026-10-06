@@ -31,12 +31,16 @@ denotes this inviscid reference in both panels.
 | Exact shock profile | Exact shock trajectory |
 | :---: | :---: |
 | ![Analytical inviscid solution over physical time](../assets/gifs/shock-motion.gif) | ![Analytical shock path x_s(t)=0.5t](../assets/gifs/shock-trajectory.gif) |
+| Horizontal axis: position $x$; vertical axis: state $u$. The blue step is the exact inviscid solution; the red dashed vertical line marks the current shock position. | Horizontal axis: position $x$; vertical axis: physical time $t$. The teal dashed line is the full path; the red segment is the path already traversed, the red dot marks the current position, and the orange horizontal line marks the current time. |
 
-These unchanged homepage GIFs show the reference from two perspectives. The
-profile view plots $u$ against $x$; the trajectory view plots $t$ against $x$.
-The discontinuity advances from $x=0$ to $x=0.5$ as time advances from 0 to 1.
+These unchanged homepage GIFs show the analytical inviscid reference from two
+perspectives. The discontinuity advances from $x=0$ to $x=0.5$ along
+$x_s(t)=t/2$ as physical time advances from 0 to 1; the two states remain
+1 and 0. At $t=0.5$, its position is $x=0.25$.
 Both files contain 61 frames at 100 ms per frame, on a 960 by 900 pixel canvas.
-They provide the analytical baseline for the two learned solutions below.
+They provide the analytical baseline for the two learned solutions below:
+red marks the analytical shock here, and denotes a network prediction in
+the next pair. Playback follows physical time, not training progress.
 
 ## Preserved prediction animations
 

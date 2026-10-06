@@ -49,13 +49,15 @@ together with the learned approximation.
 | Solution profile $u(x,t)$ | Shock trajectory in $(x,t)$ |
 | :---: | :---: |
 | ![Moving analytical Burgers shock profile](../assets/gifs/shock-motion.gif) | ![Analytical Burgers shock trajectory](../assets/gifs/shock-trajectory.gif) |
+| Horizontal axis: position $x$; vertical axis: state $u$. Blue is the exact inviscid step; the red dashed vertical line marks its current shock position. The displayed $t$ is physical time. | Horizontal axis: position $x$; vertical axis: physical time $t$. Teal dashes show the full path; the red segment shows the path already traversed, the red dot marks the current position, and the orange horizontal line marks the current time. |
 
-The left animation plots state against position at the displayed physical time.
-The right plots time vertically and position horizontally: the teal dashed line
-is the complete path, the red segment and dot show the portion reached, and
-the orange line marks the current time. At $t=0.5$, both views locate the shock
-at $x=0.25$. They illustrate the same analytical reference used in the
-standard and artificial-viscosity prediction comparisons.
+Both GIFs loop through 61 frames from $t=0$ to $t=1$: the shock moves from
+$x=0$ to $x=0.5$ along $x_s(t)=t/2$, while the two states remain 1 and 0.
+At $t=0.5$, both views locate the shock at $x=0.25$. These are analytical
+reference views; the red markers here indicate the shock, while the red
+curves in the [prediction comparisons](#6-connect-predictions-to-the-research-figures)
+represent the trained networks. Playback follows physical time, not optimizer
+updates or training epochs.
 
 ## 2. What one sample, batch, and experiment contain
 

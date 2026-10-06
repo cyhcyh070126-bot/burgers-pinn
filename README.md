@@ -39,20 +39,23 @@ boundary and 0 at the right. The inviscid entropy shock moves along $x=t/2$.
 
 ### Analytical reference animations
 
-| Burgers shock motion | Burgers shock trajectory |
+| Analytical solution profile $u(x,t)$ | Analytical shock trajectory in $(x,t)$ |
 | :---: | :---: |
 | ![Exact entropy-solution profile moving from x=0 to x=0.5](assets/gifs/shock-motion.gif) | ![Exact shock trajectory x_s(t)=0.5t in the space-time plane](assets/gifs/shock-trajectory.gif) |
+| Horizontal axis: position $x$; vertical axis: state $u$. The blue step is the exact inviscid solution; the red dashed vertical line marks the shock position at the time shown above the plot. | Horizontal axis: position $x$; vertical axis: physical time $t$. The teal dashed line is the full shock path; the red segment shows the path already traversed, the red dot marks the current position, and the orange horizontal line marks the current time. |
 
-These two animations from the research homepage show the analytical inviscid
-reference used to interpret the model predictions. On the left, the blue step
-is the solution profile and the dashed red line marks its moving discontinuity.
-On the right, the teal dashed line is the full path $x_s(t)=0.5t$, the red
-segment and dot track its progress, and the orange line marks the current time.
-Both advance from $t=0$ to $t=1$ in 61 frames.
+Both animations show the **analytical inviscid reference**: as physical time
+advances from $t=0$ to $t=1$, the shock moves from $x=0$ to $x=0.5$ along
+$x_s(t)=t/2$, while the states on either side remain 1 and 0. At $t=0.5$,
+the shock is at $x=0.25$. Each GIF loops through 61 frames.
+These views illustrate the prescribed problem; network predictions appear in
+[Prediction examples](#prediction-examples), where red denotes the learned
+profile. The animation time is physical time, not training progress.
 
 [Original static figure](assets/figures/inviscid-shock-reference.png) ·
-[Original PDF](assets/pdf/inviscid-shock-reference.pdf). The static reference
-shows $t=0.5$, when the shock is at $x=0.25$.
+[Original PDF](assets/pdf/inviscid-shock-reference.pdf). These linked static
+views show the profile and trajectory at $t=0.5$, when the shock is at $x=0.25$;
+their full trajectory is drawn in gray dashes, rather than the GIF's teal.
 
 ### Training-point generation
 
@@ -173,6 +176,7 @@ connects each figure to the reported diagnostics.
 | Standard PINN | Artificial-viscosity PINN, $\nu=0.001$ |
 | :---: | :---: |
 | ![Standard PINN prediction](assets/gifs/standard-pinn.gif) | ![Artificial-viscosity PINN prediction](assets/gifs/artificial-viscosity-pinn.gif) |
+| Standard PINN: blue is the analytical inviscid step; red is this trained network's predicted profile. | Artificial-viscosity PINN with $\nu=0.001$: blue is the same inviscid reference; red is this separately trained network's predicted profile. |
 
 **Blue: analytical inviscid solution. Red: network prediction.** Each animation
 shows one trained model evaluated over physical time, from $t=0$ to $t=1$.
