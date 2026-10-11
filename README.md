@@ -7,11 +7,7 @@
 [![Results: Comparison](https://img.shields.io/badge/Results-Comparison-2E8B57.svg)](#research-results)
 [![Docs: Experiment Guide](https://img.shields.io/badge/Docs-Experiment_Guide-007EC6.svg)](docs/experiment-guide.md)
 
-**[Yanghao Chen](https://cyhcyh070126-bot.github.io/)** · [2350083@tongji.edu.cn](mailto:2350083@tongji.edu.cn)
-
-*Tongji University*
-
----
+**Yanghao Chen · Tongji University**
 
 This study compares a standard physics-informed neural network (PINN) with a
 PINN using constant artificial viscosity for a one-dimensional Burgers Riemann
@@ -19,55 +15,23 @@ problem. Both PyTorch implementations use the same network architecture,
 sampling configuration, and training budget. We evaluate shock position,
 transition width, and error relative to the analytical inviscid entropy solution.
 
-**No dataset download is needed.** Training points are generated locally.
-The repository includes archived figures and metrics, but **not the trained
-checkpoints behind them**; the commands below train and evaluate new models.
+[Experiment](#what-one-experiment-contains) · [Problem and data](#problem-and-training-data) · [Network and loss](#network-and-loss) · [Training](#training-strategy) · [Results](#research-results) · [Run the workflow](#install) · [Documentation](#documentation)
 
-🌐 **[Project page](https://cyhcyh070126-bot.github.io/cv/#burgers-pinn)** — problem setup, research figures, and results.
+## What one experiment contains
 
-[Start here](#start-here) · [Problem and data](#problem-and-training-data) · [Network and loss](#network-and-loss) · [Results](#research-results) · [Install](#install) · [Train and evaluate](#train-and-evaluate) · [Documentation](#documentation)
+Each run generates fixed training-point pools, fits a coordinate network
+$(x,t)\mapsto u_\theta(x,t)$, and saves the final weights and predictions.
 
----
+| Component | Contents |
+| :--- | :--- |
+| Physical problem | Initial jump from 1 to 0 on $x\in[-1,1]$, with $t\in[0,1]$ |
+| Training data | Fixed pools of initial, boundary, and interior coordinates |
+| Learned field | Coordinate network $(x,t)\mapsto u_\theta(x,t)$ |
+| Numerical outputs | Checkpoint, loss-history CSV, metrics JSON, and field arrays |
+| Visual outputs | Training-history, sampling, and profile PDFs; prediction GIF |
 
-## Start here
-
-| Goal | Entry point | What you need |
-| :--- | :--- | :--- |
-| Inspect the comparison | [![View: Results](https://img.shields.io/badge/View-Results-2E8B57.svg)](#research-results) · [Animations](#prediction-examples) | Browser only |
-| Check both methods on CPU | [![Run: CPU Check](https://img.shields.io/badge/Run-CPU_Check-007EC6.svg)](#quick-execution-check) | [Python environment](#install); no dataset or checkpoint |
-| Train the full models | [![Train: PINNs](https://img.shields.io/badge/Train-PINNs-E16737.svg)](#train-and-evaluate) | Generated point pools; CPU or CUDA |
-| Evaluate a trained model | [![Evaluate: Checkpoint](https://img.shields.io/badge/Evaluate-Checkpoint-8A2BE2.svg)](#evaluate-a-saved-checkpoint) | A checkpoint from your own training run |
-
-The [experiment guide](docs/experiment-guide.md) walks through one training
-batch and shows how to extract a profile from the saved field arrays.
-
-### Quick execution check
-
-After [installation](#install), run these commands from the repository root to
-train small CPU models and reload their saved checkpoints:
-
-```bash
-python -m burgers_pinn.train --method standard --output-dir outputs/smoke-standard --device cpu --smoke-test
-python -m burgers_pinn.train --method viscosity --output-dir outputs/smoke-viscosity --device cpu --smoke-test
-python -m burgers_pinn.evaluate --checkpoint outputs/smoke-standard/checkpoint_final.pt --output-dir outputs/smoke-standard-evaluation --device cpu
-python -m burgers_pinn.evaluate --checkpoint outputs/smoke-viscosity/checkpoint_final.pt --output-dir outputs/smoke-viscosity-evaluation --device cpu
-```
-
-Each training run writes `checkpoint_final.pt`, `training_history.csv`,
-`result.json`, and `evaluation_fields.npz`. Evaluation reloads the checkpoint
-and writes a new metrics report and field arrays. Successful runs record
-`completed: true`; these smoke runs and their evaluations also record
-`smoke_test: true` and generate numerical outputs without PDF/GIF plots.
-
-| Configuration | CPU execution check | Research run |
-| :--- | :--- | :--- |
-| Hidden layers × width | 2 × 8 | 8 × 64 |
-| Epochs / optimizer updates | 2 / 4 | 1,000 / 32,000 |
-| Training-point pools | Reduced | 24,576 points |
-| Purpose | Verify train, save, and evaluate | Train the full model |
-
-Every train or evaluation command requires a **new output directory**. Choose
-a new name when running again; existing experiment folders are never overwritten.
+The [experiment guide](docs/experiment-guide.md) gives a worked training batch
+and an example of extracting a profile from the saved field arrays.
 
 ## Problem and training data
 
@@ -104,8 +68,7 @@ shuffled each epoch. IC and BC pools are balanced across their two sides.
 | **Total** | **24,576** | **768** | |
 
 Interior coordinates enter through the PDE residual, evaluated by automatic
-differentiation. The analytical field is used only for diagnostics and plots;
-it is excluded from both the optimizer loss and checkpoint selection.
+differentiation. The analytical field is used only for diagnostics and plots.
 The [batch definition](docs/methods.md#what-goes-into-a-training-batch) specifies
 the coordinates and prescribed IC/BC targets.
 
@@ -212,14 +175,14 @@ The profiles show propagation of the transition and its finite width.
 
 Each animation evaluates a fixed trained model over physical time, from 0 to 1.
 The inviscid solution is the common reference in both panels.
-The archived checkpoints are not included. [Full training](#train-and-evaluate)
-uses the recorded configuration to fit new models; it does not reload the
-models behind these figures.
+The archived checkpoints are not included. The commands below train new models
+with the recorded configuration; they do not reload the models behind these figures.
 
 ## Install
 
 The tested environment uses **Python 3.12** and **PyTorch 2.10.0**. Start with
-the CPU installation below. Run all commands from the repository root:
+the CPU installation below; training points are generated locally, so no
+dataset download is required. Run all commands from the repository root:
 
 ```bash
 git clone https://github.com/cyhcyh070126-bot/burgers-pinn.git
@@ -237,8 +200,13 @@ py -3.12 -m venv .venv
 ```
 
 Activate with `.\.venv\Scripts\Activate.ps1` to use the shorter `python`
-commands. If PowerShell blocks activation, replace `python` in those commands
-with `.\.venv\Scripts\python.exe`; no system policy changes are needed.
+commands below. If PowerShell blocks activation, replace `python` in those
+commands with `.\.venv\Scripts\python.exe`; no system policy changes are needed.
+For example:
+
+```powershell
+.\.venv\Scripts\python.exe -m burgers_pinn.train --method standard --output-dir outputs/first-run --device cpu --smoke-test
+```
 
 </details>
 
@@ -263,23 +231,36 @@ used a fresh Windows CPU environment.
 PDF and GIF generation uses **Times New Roman** and STIX math text.
 Use `--skip-plots` for numerical training and evaluation without the plot fonts.
 
-## What one experiment contains
+## Quick execution check
 
-Each training run generates fixed IC, BC, and interior point pools, fits a
-coordinate network $(x,t)\mapsto u_\theta(x,t)$, and saves its final weights
-and predictions. No simulation dataset is downloaded at any stage.
+After installation, run the commands below to check both methods and reload their saved checkpoints:
 
-| Workflow | Data or model required | Supplied here? |
+```bash
+python -m burgers_pinn.train --method standard --output-dir outputs/smoke-standard --device cpu --smoke-test
+python -m burgers_pinn.train --method viscosity --output-dir outputs/smoke-viscosity --device cpu --smoke-test
+python -m burgers_pinn.evaluate --checkpoint outputs/smoke-standard/checkpoint_final.pt --output-dir outputs/smoke-standard-evaluation --device cpu
+python -m burgers_pinn.evaluate --checkpoint outputs/smoke-viscosity/checkpoint_final.pt --output-dir outputs/smoke-viscosity-evaluation --device cpu
+```
+
+Each training command writes `checkpoint_final.pt`, `training_history.csv`,
+`result.json`, and `evaluation_fields.npz`. Each evaluation command reloads that
+checkpoint and writes a new `result.json` and `evaluation_fields.npz`.
+Successful runs record `completed: true`; smoke runs and evaluations of smoke
+checkpoints also record `smoke_test: true`. Smoke checks use numerical outputs;
+the research configuration also supports PDF and GIF generation as described below.
+
+| Configuration | Execution check | Research run |
 | :--- | :--- | :--- |
-| Train either method | Prescribed IC/BC values and collocation coordinates | Generated by the code |
-| Evaluate a new run | `checkpoint_final.pt` with the saved model and configuration | Created by training |
-| Compute reference errors | Analytical inviscid entropy solution | Implemented in the code; evaluation only |
-| View the archived research results | Preserved figures, GIFs, and recorded metrics | Yes |
-| Re-evaluate the models behind the archived figures | Their original trained checkpoints | No |
+| Hidden layers × width | 2 × 8 | 8 × 64 |
+| Epochs / optimizer updates | 2 / 4 | 1,000 / 32,000 |
+| Training-point pools | Reduced | 24,576 points |
+| Purpose | Verify train, save, and evaluate | Train the full model |
+
+Every train or evaluation command requires a **new output directory** to keep
+each experiment's configuration and results together. Choose a new name when
+running again.
 
 ## Train and evaluate
-
-### Train new models
 
 These commands use the full model and 1,000-epoch training budget.
 `--skip-plots` produces numerical outputs without requiring Times New Roman:
@@ -287,6 +268,7 @@ These commands use the full model and 1,000-epoch training budget.
 ```bash
 python -m burgers_pinn.train --method standard --output-dir outputs/standard --device auto --skip-plots
 python -m burgers_pinn.train --method viscosity --viscosity 0.001 --output-dir outputs/viscosity --device auto --skip-plots
+python -m burgers_pinn.evaluate --checkpoint outputs/viscosity/checkpoint_final.pt --output-dir outputs/viscosity-evaluation --device auto --skip-plots
 ```
 
 `--device auto` selects CUDA when available and CPU otherwise. Use `--device cpu`
@@ -297,18 +279,6 @@ The default budget is 1,000 epochs. Use `--epochs` and `--seed` to configure a
 new experiment. Seeds must be integers from 0 to 4,294,967,295.
 `configs/formal_defaults.json` documents the default settings; configure runs
 through the CLI options, which are listed by `python -m burgers_pinn.train --help`.
-
-### Evaluate a saved checkpoint
-
-Evaluation reloads the final checkpoint, including its configuration, viscosity,
-and sampled points, without further optimization:
-
-```bash
-python -m burgers_pinn.evaluate --checkpoint outputs/standard/checkpoint_final.pt --output-dir outputs/standard-evaluation --device auto --skip-plots
-python -m burgers_pinn.evaluate --checkpoint outputs/viscosity/checkpoint_final.pt --output-dir outputs/viscosity-evaluation --device auto --skip-plots
-```
-
-### Outputs and plots
 
 | Output | Contents |
 | --- | --- |
@@ -330,6 +300,9 @@ To generate the original-style PDFs and GIF, install Times New Roman and omit
 point layout) and a prediction GIF. Standalone evaluation writes profiles,
 point layout when available, and a GIF. Training-history plots use the history
 recorded during training.
+
+Training starts a new experiment; evaluation reloads its final checkpoint,
+including the saved configuration, viscosity, and sampled points.
 
 ## Documentation
 
